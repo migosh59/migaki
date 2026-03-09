@@ -112,6 +112,28 @@
             background: var(--panel-bg);
             z-index: 10;
         }
+        
+        #sync-indicator {
+    position: fixed; bottom: 18px; left: 18px;
+    font-size: 12px; font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    border-radius: 20px;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; z-index: 9999;
+}
+#sync-indicator.saving {
+    opacity: 1;
+    background: rgba(44,96,128,0.9);
+    border: 1px solid rgba(70,140,180,0.4);
+    color: #90c8e8;
+}
+#sync-indicator.saved {
+    opacity: 1;
+    background: rgba(74,140,63,0.9);
+    border: 1px solid rgba(100,200,80,0.4);
+    color: #b8ffb8;
+}
 
         .header-titles { text-align: center; }
 
@@ -924,6 +946,16 @@ isAdmin().then(admin => {
         btn.addEventListener('click', () => window.location.href = './admin.html')
     }
 })
+    // Afficher le pseudo
+const { data: { user } } = await supabase.auth.getUser()
+if (user) {
+    const pseudo = user.user_metadata?.pseudo || user.email.split('@')[0]
+    const headerTitles = document.querySelector('.header-titles')
+    const span = document.createElement('div')
+    span.style.cssText = 'font-size:12px; color:var(--text-muted); margin-top:2px; font-style:italic; letter-spacing:0.05em;'
+    span.textContent = '⛩ ' + pseudo
+    headerTitles.appendChild(span)
+}
 
         // Déconnexion
         document.getElementById('btn-logout').addEventListener('click', async () => {
@@ -996,6 +1028,7 @@ isAdmin().then(admin => {
             if (!contenu) return
 
             sgfActifId = sgf.id
+            window._sgfActifId = sgf.id
             sgfActifPath = sgf.storage_path
 
             // Mettre à jour l'UI liste
@@ -1031,13 +1064,20 @@ isAdmin().then(admin => {
 
         // ── Sauvegarder la progression depuis app.js ──
         window.addEventListener('sauvegarder-variation', async (e) => {
-            if (!sgfActifId) return
-            const { sig, statut, nom, commentaire } = e.detail
-            await sauvegarderVariation(sgfActifId, sig, statut, nom, commentaire)
-        })
+    if (!sgfActifId) return
+    const indicator = document.getElementById('sync-indicator')
+    indicator.textContent = '↑ Sauvegarde...'
+    indicator.className = 'saving'
+    const { sig, statut, nom, commentaire } = e.detail
+    await sauvegarderVariation(sgfActifId, sig, statut, nom, commentaire)
+    indicator.textContent = '✓ Sauvegardé'
+    indicator.className = 'saved'
+    setTimeout(() => indicator.className = '', 2000)
+})
 
         // ── Init ──
         rafraichirListeSgf()
     </script>
+    <div id="sync-indicator">✓ Sauvegardé</div>
 </body>
 </html>

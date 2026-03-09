@@ -727,4 +727,31 @@ btnReset.addEventListener('click', () => {
         afficherTableau();
         mettreAJourStatistiques();
     }
+    
+    /* =============================================
+   MIGRATION LOCALSTORAGE → SUPABASE
+============================================= */
+async function migrerLocalStorage() {
+    const data = localStorage.getItem('fuseki_data')
+    if (!data) return
+    const parsed = JSON.parse(data)
+    if (Object.keys(parsed).length === 0) return
+
+    // Vérifier si déjà migré
+    if (localStorage.getItem('fuseki_migrated')) return
+
+    const sgfId = window._sgfActifId
+    if (!sgfId) return
+
+    console.log('Migration localStorage → Supabase...')
+    for (const [sig, d] of Object.entries(parsed)) {
+        window.dispatchEvent(new CustomEvent('sauvegarder-variation', {
+            detail: { sig, statut: d.statut, nom: d.nom, commentaire: d.commentaire || '' }
+        }))
+    }
+    localStorage.setItem('fuseki_migrated', '1')
+    console.log('Migration terminée')
+}
 });
+
+
