@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
+<script type="module">
+  import { supabase } from './supabase.js'
+  // Redirige vers auth si pas connecté
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) window.location.href = './auth.html'
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -737,6 +743,20 @@
             <h1>道場 &nbsp;FUSEKI</h1>
             <div class="subtitle">Entraînement aux ouvertures</div>
         </div>
+        <button id="btn-logout" title="Se déconnecter" style="
+            position: absolute; right: 70px; top: 50%;
+            transform: translateY(-50%);
+            background: var(--surface-2);
+            border: 1px solid var(--border-strong);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.22s;
+            color: var(--text-secondary);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        ">⏏ Quitter</button>
         <button id="btn-theme" title="Changer de thème">☀️</button>
     </header>
 
@@ -876,5 +896,12 @@
     <button id="btn-quitter-presentation">✕ Quitter</button>
 
     <script src="app.js"></script>
+    <script type="module">
+        import { supabase } from './supabase.js'
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await supabase.auth.signOut()
+            window.location.href = './auth.html'
+        })
+     </script>
 </body>
 </html>
