@@ -749,6 +749,20 @@
             <div class="subtitle">Entraînement aux ouvertures</div>
         </div>
         <button id="btn-logout" title="Se déconnecter">⏏ Quitter</button>
+        <button id="btn-admin" title="Administration" style="
+    position: absolute; left: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px; cursor: pointer;
+    transition: all 0.22s;
+    color: var(--text-muted);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+    display: none;
+">⚙ Admin</button>
         <button id="btn-theme" title="Changer de thème">☀️</button>
     </header>
 
@@ -900,7 +914,16 @@
 
     <script src="app.js"></script>
     <script type="module">
-        import { supabase, listerSgf, uploaderSgf, telechargerSgf, supprimerSgf, chargerProgression, sauvegarderVariation } from './supabase.js'
+        import { supabase, listerSgf, uploaderSgf, telechargerSgf, supprimerSgf, chargerProgression, sauvegarderVariation, isAdmin } from './supabase.js'
+
+// Afficher le bouton admin si nécessaire
+isAdmin().then(admin => {
+    if (admin) {
+        const btn = document.getElementById('btn-admin')
+        btn.style.display = 'block'
+        btn.addEventListener('click', () => window.location.href = './admin.html')
+    }
+})
 
         // Déconnexion
         document.getElementById('btn-logout').addEventListener('click', async () => {

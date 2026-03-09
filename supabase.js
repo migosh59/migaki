@@ -118,3 +118,52 @@ export async function sauvegarderVariation(sgfId, sig, statut, nom, commentaire)
         updated_at: new Date().toISOString()
     }, { onConflict: 'user_id,sgf_id,variation_sig' })
 }
+
+/* ─── Admin ─────────────────────────────────── */
+export async function isAdmin() {
+    const { data, error } = await supabase.rpc('is_admin')
+    if (error) return false
+    return data === true
+}
+
+export async function uploaderSgfPartage(file) {
+    const path = `shared/${file.name}`
+
+    const { error: storageError } = await supabase.storage
+        .from('sgf-files')
+        .upload(path, file, { upsert: true })
+    if (storageError) { console.error(storageError); return null }
+
+    const { data: existing } = await supabase
+        .from('sgf_files')
+        .select('id')
+        .eq('is_shared', true)
+        .eq('name', file.name)
+        .single()
+
+    if (existing) {
+        await supabase
+            .from('sgf_files')
+            .update({ updated_at: new Date().toISOString() })
+            .eq('id', existing.id)
+        return existing.id
+    } else {
+        const { data, error } = await supabase
+            .from('sgf_files')
+            .insert({
+                owner_id: null,
+                name: file.name,
+                storage_path: path,
+                is_shared: true
+            })
+            .select()
+            .single()
+        if (error) { console.error(error); return null }
+        return data.id
+    }
+}
+
+export async function supprimerSgfPartage(sgfId, storagePath) {
+    await supabase.storage.from('sgf-files').remove([storagePath])
+    await supabase.from('sgf_files').delete().eq('id', sgfId)
+}
