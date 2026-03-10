@@ -96,14 +96,6 @@
         color: var(--gold-bright);
         background: var(--surface-3);
       }
-      .btn-primary {
-        background: linear-gradient(135deg, var(--wood-dark), var(--wood));
-        border-color: var(--gold);
-        color: var(--gold-bright);
-      }
-      .btn-primary:hover {
-        filter: brightness(1.15);
-      }
       .btn-danger {
         border-color: rgba(140, 48, 48, 0.5);
         color: #b07070;
@@ -115,9 +107,12 @@
       }
 
       main {
-        max-width: 900px;
+        max-width: 960px;
         margin: 0 auto;
         padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
       }
 
       .section-title {
@@ -131,14 +126,49 @@
         border-bottom: 1px solid var(--border);
       }
 
-      /* Upload zone */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .stat-card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 16px;
+        text-align: center;
+      }
+
+      .stat-card-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .stat-card-value {
+        font-family: 'Cinzel', serif;
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--gold-bright);
+        display: block;
+        line-height: 1;
+      }
+      .stat-card-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 6px;
+        display: block;
+      }
+
       .upload-zone {
         background: var(--surface-1);
         border: 2px dashed var(--border-strong);
         border-radius: var(--radius);
         padding: 32px;
         text-align: center;
-        margin-bottom: 32px;
+        margin-bottom: 16px;
         transition: border-color 0.2s;
         cursor: pointer;
         position: relative;
@@ -175,15 +205,14 @@
         background: rgba(212, 160, 23, 0.05);
       }
 
-      /* Progress bar upload */
       #upload-status {
-        margin-top: 16px;
         display: none;
         background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius);
         padding: 12px 16px;
         font-size: 14px;
+        margin-bottom: 16px;
       }
       #upload-status.success {
         border-color: rgba(74, 140, 63, 0.4);
@@ -200,8 +229,7 @@
         color: var(--text-secondary);
       }
 
-      /* Table SGF partagés */
-      .sgf-table {
+      .data-table {
         width: 100%;
         border-collapse: collapse;
         background: var(--surface-1);
@@ -210,7 +238,7 @@
         overflow: hidden;
       }
 
-      .sgf-table th {
+      .data-table th {
         padding: 12px 16px;
         background: var(--surface-2);
         border-bottom: 1px solid var(--border);
@@ -222,39 +250,45 @@
         text-align: left;
       }
 
-      .sgf-table td {
+      .data-table td {
         padding: 12px 16px;
         border-bottom: 1px solid var(--border);
         font-size: 15px;
         vertical-align: middle;
       }
 
-      .sgf-table tr:last-child td {
+      .data-table tr:last-child td {
         border-bottom: none;
       }
-      .sgf-table tbody tr:hover {
+      .data-table tbody tr:hover {
         background: rgba(212, 160, 23, 0.04);
       }
 
-      .sgf-name {
-        color: var(--text-primary);
-        font-weight: 500;
-      }
-      .sgf-date {
+      .text-muted {
         color: var(--text-muted);
         font-size: 13px;
       }
-      .sgf-actions {
+      .text-primary {
+        color: var(--text-primary);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        background: var(--surface-3);
+        color: var(--text-muted);
+      }
+      .badge-active {
+        background: rgba(74, 140, 63, 0.2);
+        color: #80cc70;
+      }
+
+      .table-actions {
         display: flex;
         gap: 8px;
         justify-content: flex-end;
-      }
-
-      #loading-msg {
-        padding: 24px;
-        text-align: center;
-        color: var(--text-muted);
-        font-style: italic;
       }
 
       .empty-state {
@@ -264,7 +298,6 @@
         font-style: italic;
       }
 
-      /* Toast */
       #toast {
         position: fixed;
         bottom: 24px;
@@ -319,27 +352,65 @@
       </div>
 
       <div id="admin-content" style="display: none">
-        <p class="section-title">Uploader un SGF partagé</p>
-
-        <div class="upload-zone" id="upload-zone">
-          <input type="file" id="sgf-admin-upload" accept=".sgf" multiple />
-          <div class="upload-zone-icon">📂</div>
-          <div class="upload-zone-text">
-            Cliquer ou glisser-déposer des fichiers SGF
-          </div>
-          <div class="upload-zone-sub">
-            Les SGF uploadés ici seront visibles par tous les utilisateurs
+        <!-- Stats globales -->
+        <div>
+          <p class="section-title">Vue d'ensemble</p>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-card-icon">👤</span>
+              <span class="stat-card-value" id="stat-users">—</span>
+              <span class="stat-card-label">Utilisateurs</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">📄</span>
+              <span class="stat-card-value" id="stat-sgf-total">—</span>
+              <span class="stat-card-label">SGF au total</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">🌐</span>
+              <span class="stat-card-value" id="stat-sgf-shared">—</span>
+              <span class="stat-card-label">SGF partagés</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">🎯</span>
+              <span class="stat-card-value" id="stat-variations">—</span>
+              <span class="stat-card-label">Séquences jouées</span>
+            </div>
           </div>
         </div>
 
-        <div id="upload-status"></div>
+        <!-- Utilisateurs -->
+        <div>
+          <p class="section-title">
+            Utilisateurs (<span id="nb-users">0</span>)
+          </p>
+          <div id="liste-users">
+            <div class="empty-state">Chargement...</div>
+          </div>
+        </div>
 
-        <p class="section-title" style="margin-top: 32px">
-          SGF partagés (<span id="nb-partages">0</span>)
-        </p>
+        <!-- SGF partagés -->
+        <div>
+          <p class="section-title">
+            SGF partagés (<span id="nb-partages">0</span>)
+          </p>
 
-        <div id="liste-partages">
-          <div id="loading-msg">Chargement...</div>
+          <div class="upload-zone" id="upload-zone">
+            <input type="file" id="sgf-admin-upload" accept=".sgf" multiple />
+            <div class="upload-zone-icon">📂</div>
+            <div class="upload-zone-text">
+              Cliquer ou glisser-déposer des fichiers SGF
+            </div>
+            <div class="upload-zone-sub">
+              Les SGF uploadés ici seront visibles par tous les utilisateurs
+            </div>
+          </div>
+
+          <div id="upload-status"></div>
+
+          <div id="liste-partages">
+            <div class="empty-state">Chargement...</div>
+          </div>
         </div>
       </div>
     </main>
@@ -355,7 +426,7 @@
         listerSgf,
       } from './supabase.js';
 
-      // ── Auth check ──
+      // ── Auth + admin check ──
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -368,13 +439,16 @@
         document.getElementById('access-denied').style.display = 'block';
       } else {
         document.getElementById('admin-content').style.display = 'block';
-        chargerListePartages();
+        chargerDonnees();
       }
 
       // ── Navigation ──
-      document.getElementById('btn-retour').addEventListener('click', () => {
-        window.location.href = './index.html';
-      });
+      document
+        .getElementById('btn-retour')
+        .addEventListener(
+          'click',
+          () => (window.location.href = './index.html')
+        );
       document
         .getElementById('btn-logout')
         .addEventListener('click', async () => {
@@ -390,7 +464,89 @@
         setTimeout(() => (el.className = ''), 2500);
       }
 
-      // ── Upload ──
+      // ── Chargement global ──
+      async function chargerDonnees() {
+        await Promise.all([
+          chargerStats(),
+          chargerListeUsers(),
+          chargerListePartages(),
+        ]);
+      }
+
+      // ── Stats globales ──
+      async function chargerStats() {
+        const { data: users } = await supabase.rpc('get_users_admin');
+        const { data: sgfs } = await supabase
+          .from('sgf_files')
+          .select('id, is_shared');
+        const { count: varCount } = await supabase
+          .from('variation_progress')
+          .select('*', { count: 'exact', head: true });
+
+        document.getElementById('stat-users').textContent = users?.length ?? 0;
+        document.getElementById('stat-sgf-total').textContent =
+          sgfs?.length ?? 0;
+        document.getElementById('stat-sgf-shared').textContent =
+          sgfs?.filter((s) => s.is_shared).length ?? 0;
+        document.getElementById('stat-variations').textContent = varCount ?? 0;
+      }
+
+      // ── Liste utilisateurs ──
+      async function chargerListeUsers() {
+        const { data: users, error } = await supabase.rpc('get_users_admin');
+        const container = document.getElementById('liste-users');
+
+        if (error || !users) {
+          container.innerHTML =
+            '<div class="empty-state">Erreur de chargement.</div>';
+          return;
+        }
+
+        document.getElementById('nb-users').textContent = users.length;
+
+        if (users.length === 0) {
+          container.innerHTML =
+            '<div class="empty-state">Aucun utilisateur.</div>';
+          return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'data-table';
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Inscrit le</th>
+                    <th style="text-align:center">SGF</th>
+                    <th style="text-align:center">Séquences jouées</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        const tbody = table.querySelector('tbody');
+
+        for (const user of users) {
+          const tr = document.createElement('tr');
+          const date = new Date(user.created_at).toLocaleDateString('fr-FR');
+          tr.innerHTML = `
+                <td>
+                    <span class="text-primary">${user.email}</span>
+                    ${user.variation_count > 0 ? '<span class="badge badge-active" style="margin-left:8px;">actif</span>' : ''}
+                </td>
+                <td><span class="text-muted">${date}</span></td>
+                <td style="text-align:center"><span class="badge">${user.sgf_count}</span></td>
+                <td style="text-align:center">
+                    <span class="${user.variation_count > 0 ? 'text-primary' : 'text-muted'}">${user.variation_count}</span>
+                </td>
+            `;
+          tbody.appendChild(tr);
+        }
+
+        container.innerHTML = '';
+        container.appendChild(table);
+      }
+
+      // ── Upload SGF partagé ──
       const uploadInput = document.getElementById('sgf-admin-upload');
       const uploadZone = document.getElementById('upload-zone');
       const uploadStatus = document.getElementById('upload-status');
@@ -398,7 +554,6 @@
       uploadInput.addEventListener('change', () =>
         traiterFichiers(uploadInput.files)
       );
-
       uploadZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadZone.classList.add('dragover');
@@ -438,15 +593,16 @@
 
         uploadInput.value = '';
         chargerListePartages();
+        chargerStats();
       }
 
       // ── Liste SGF partagés ──
       async function chargerListePartages() {
         const tous = await listerSgf();
         const partages = tous.filter((s) => s.is_shared);
+        const container = document.getElementById('liste-partages');
 
         document.getElementById('nb-partages').textContent = partages.length;
-        const container = document.getElementById('liste-partages');
 
         if (partages.length === 0) {
           container.innerHTML =
@@ -455,7 +611,7 @@
         }
 
         const table = document.createElement('table');
-        table.className = 'sgf-table';
+        table.className = 'data-table';
         table.innerHTML = `
             <thead>
                 <tr>
@@ -472,11 +628,12 @@
           const tr = document.createElement('tr');
           const date = new Date(sgf.created_at).toLocaleDateString('fr-FR');
           tr.innerHTML = `
-                <td><span class="sgf-name">${sgf.name.replace('.sgf', '')}</span></td>
-                <td><span class="sgf-date">${date}</span></td>
+                <td><span class="text-primary">${sgf.name.replace('.sgf', '')}</span></td>
+                <td><span class="text-muted">${date}</span></td>
                 <td>
-                    <div class="sgf-actions">
-                        <button class="btn btn-danger btn-del" data-id="${sgf.id}" data-path="${sgf.storage_path}" data-name="${sgf.name}">
+                    <div class="table-actions">
+                        <button class="btn btn-danger btn-del"
+                            data-id="${sgf.id}" data-path="${sgf.storage_path}" data-name="${sgf.name}">
                             Supprimer
                         </button>
                     </div>
@@ -488,7 +645,6 @@
         container.innerHTML = '';
         container.appendChild(table);
 
-        // Boutons suppression
         container.querySelectorAll('.btn-del').forEach((btn) => {
           btn.addEventListener('click', async () => {
             if (
@@ -500,6 +656,7 @@
             await supprimerSgfPartage(btn.dataset.id, btn.dataset.path);
             toast('SGF supprimé', 'success');
             chargerListePartages();
+            chargerStats();
           });
         });
       }
