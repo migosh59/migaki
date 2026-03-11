@@ -2,7 +2,7 @@
    THÈME CLAIR / SOMBRE — init immédiate
 ============================================= */
 (function () {
-  const saved = localStorage.getItem('fuseki_theme') || 'dark';
+  const saved = localStorage.getItem('migaki_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
 })();
 
@@ -726,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('fuseki_theme', next);
+    localStorage.setItem('migaki_theme', next);
     btnTheme.textContent = next === 'dark' ? '☀️' : '🌙';
   });
 

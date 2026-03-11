@@ -77,6 +77,7 @@
       .header-btns {
         display: flex;
         gap: 10px;
+        align-items: center;
       }
 
       .btn {
@@ -104,6 +105,14 @@
         background: rgba(140, 48, 48, 0.15);
         border-color: #c06060;
         color: #e09090;
+      }
+
+      /* Style spécifique pour le bouton langue */
+      #btn-lang {
+        padding: 6px 10px;
+        font-size: 16px;
+        border-radius: 20px;
+        line-height: 1;
       }
 
       main {
@@ -330,10 +339,11 @@
   </head>
   <body>
     <header>
-      <h1>磨き &nbsp;MIGAKI <span>Administration</span></h1>
+      <h1>磨き &nbsp;MIGAKI <span id="lbl-admin-titre"></span></h1>
       <div class="header-btns">
-        <button class="btn" id="btn-retour">← Retour à l'app</button>
-        <button class="btn" id="btn-logout">⏏ Déconnexion</button>
+        <button class="btn" id="btn-lang" title="Changer de langue"></button>
+        <button class="btn" id="btn-retour"></button>
+        <button class="btn" id="btn-logout"></button>
       </div>
     </header>
 
@@ -343,73 +353,69 @@
         style="display: none; text-align: center; padding: 60px; color: #e08080"
       >
         <div style="font-size: 48px; margin-bottom: 16px">🚫</div>
-        <div style="font-family: 'Cinzel', serif; font-size: 18px">
-          Accès refusé
-        </div>
-        <div style="color: var(--text-muted); margin-top: 8px">
-          Cette page est réservée aux administrateurs.
-        </div>
+        <div
+          style="font-family: 'Cinzel', serif; font-size: 18px"
+          id="lbl-acces-refuse"
+        ></div>
+        <div
+          style="color: var(--text-muted); margin-top: 8px"
+          id="lbl-acces-refuse-desc"
+        ></div>
       </div>
 
       <div id="admin-content" style="display: none">
-        <!-- Stats globales -->
         <div>
-          <p class="section-title">Vue d'ensemble</p>
+          <p class="section-title" id="lbl-vue-ensemble"></p>
           <div class="stats-grid">
             <div class="stat-card">
               <span class="stat-card-icon">👤</span>
               <span class="stat-card-value" id="stat-users">—</span>
-              <span class="stat-card-label">Utilisateurs</span>
+              <span class="stat-card-label" id="lbl-stat-users"></span>
             </div>
             <div class="stat-card">
               <span class="stat-card-icon">📄</span>
               <span class="stat-card-value" id="stat-sgf-total">—</span>
-              <span class="stat-card-label">SGF au total</span>
+              <span class="stat-card-label" id="lbl-stat-sgf-total"></span>
             </div>
             <div class="stat-card">
               <span class="stat-card-icon">🌐</span>
               <span class="stat-card-value" id="stat-sgf-shared">—</span>
-              <span class="stat-card-label">SGF partagés</span>
+              <span class="stat-card-label" id="lbl-stat-sgf-shared"></span>
             </div>
             <div class="stat-card">
               <span class="stat-card-icon">🎯</span>
               <span class="stat-card-value" id="stat-variations">—</span>
-              <span class="stat-card-label">Séquences jouées</span>
+              <span class="stat-card-label" id="lbl-stat-sequences"></span>
             </div>
           </div>
         </div>
 
-        <!-- Utilisateurs -->
         <div>
           <p class="section-title">
-            Utilisateurs (<span id="nb-users">0</span>)
+            <span id="lbl-users-title"></span> (<span id="nb-users">0</span>)
           </p>
           <div id="liste-users">
-            <div class="empty-state">Chargement...</div>
+            <div class="empty-state" id="lbl-users-loading"></div>
           </div>
         </div>
 
-        <!-- SGF partagés -->
         <div>
           <p class="section-title">
-            SGF partagés (<span id="nb-partages">0</span>)
+            <span id="lbl-shared-title"></span> (<span id="nb-partages">0</span
+            >)
           </p>
 
           <div class="upload-zone" id="upload-zone">
             <input type="file" id="sgf-admin-upload" accept=".sgf" multiple />
             <div class="upload-zone-icon">📂</div>
-            <div class="upload-zone-text">
-              Cliquer ou glisser-déposer des fichiers SGF
-            </div>
-            <div class="upload-zone-sub">
-              Les SGF uploadés ici seront visibles par tous les utilisateurs
-            </div>
+            <div class="upload-zone-text" id="lbl-upload-instruction"></div>
+            <div class="upload-zone-sub" id="lbl-upload-desc"></div>
           </div>
 
           <div id="upload-status"></div>
 
           <div id="liste-partages">
-            <div class="empty-state">Chargement...</div>
+            <div class="empty-state" id="lbl-shared-loading"></div>
           </div>
         </div>
       </div>
@@ -418,6 +424,7 @@
     <div id="toast"></div>
 
     <script type="module">
+      import { initI18n, t, getLang, setLang } from './i18n.js';
       import {
         supabase,
         isAdmin,
@@ -425,6 +432,61 @@
         supprimerSgfPartage,
         listerSgf,
       } from './supabase.js';
+
+      // ── Initialisation i18n et Traduction Statique ──
+      await initI18n();
+      const lang = getLang();
+
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title =
+        lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () =>
+        setLang(lang === 'fr' ? 'en' : 'fr')
+      );
+
+      document.title = t('admin_page_titre');
+      document.getElementById('lbl-admin-titre').textContent = t('admin_titre');
+      document.getElementById('btn-retour').textContent = t('admin_retour');
+      document.getElementById('btn-logout').textContent = t('header_quitter');
+
+      document.getElementById('lbl-acces-refuse').textContent =
+        t('admin_acces_refuse');
+      document.getElementById('lbl-acces-refuse-desc').textContent = t(
+        'admin_acces_refuse_desc'
+      );
+
+      document.getElementById('lbl-vue-ensemble').textContent =
+        t('admin_vue_ensemble');
+      document.getElementById('lbl-stat-users').textContent = t(
+        'admin_stats_utilisateurs'
+      );
+      document.getElementById('lbl-stat-sgf-total').textContent = t(
+        'admin_stats_sgf_total'
+      );
+      document.getElementById('lbl-stat-sgf-shared').textContent = t(
+        'admin_stats_sgf_partages'
+      );
+      document.getElementById('lbl-stat-sequences').textContent = t(
+        'admin_stats_sequences'
+      );
+
+      document.getElementById('lbl-users-title').textContent =
+        t('admin_users_titre');
+      document.getElementById('lbl-shared-title').textContent = t(
+        'admin_sgf_partages_titre'
+      );
+
+      document.getElementById('lbl-users-loading').textContent =
+        t('admin_chargement');
+      document.getElementById('lbl-shared-loading').textContent =
+        t('admin_chargement');
+
+      document.getElementById('lbl-upload-instruction').textContent = t(
+        'admin_upload_instruction'
+      );
+      document.getElementById('lbl-upload-desc').textContent =
+        t('admin_upload_desc');
 
       // ── Auth + admin check ──
       const {
@@ -497,16 +559,14 @@
         const container = document.getElementById('liste-users');
 
         if (error || !users) {
-          container.innerHTML =
-            '<div class="empty-state">Erreur de chargement.</div>';
+          container.innerHTML = `<div class="empty-state">${t('admin_erreur_chargement')}</div>`;
           return;
         }
 
         document.getElementById('nb-users').textContent = users.length;
 
         if (users.length === 0) {
-          container.innerHTML =
-            '<div class="empty-state">Aucun utilisateur.</div>';
+          container.innerHTML = `<div class="empty-state">${t('admin_users_vide')}</div>`;
           return;
         }
 
@@ -515,11 +575,11 @@
         table.innerHTML = `
     <thead>
         <tr>
-            <th>Email</th>
-            <th>Inscrit le</th>
-            <th style="text-align:center">SGF</th>
-            <th style="text-align:center">Séquences jouées</th>
-            <th style="text-align:right">Actions</th>
+            <th>${t('admin_users_email')}</th>
+            <th>${t('admin_users_inscription')}</th>
+            <th style="text-align:center">${t('admin_users_sgf')}</th>
+            <th style="text-align:center">${t('admin_users_sequences')}</th>
+            <th style="text-align:right">${t('admin_table_actions')}</th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -528,11 +588,13 @@
 
         for (const user of users) {
           const tr = document.createElement('tr');
-          const date = new Date(user.created_at).toLocaleDateString('fr-FR');
+          const date = new Date(user.created_at).toLocaleDateString(
+            lang === 'fr' ? 'fr-FR' : 'en-US'
+          );
           tr.innerHTML = `
     <td>
         <span class="text-primary">${user.email}</span>
-        ${user.variation_count > 0 ? '<span class="badge badge-active" style="margin-left:8px;">actif</span>' : ''}
+        ${user.variation_count > 0 ? `<span class="badge badge-active" style="margin-left:8px;">${t('admin_users_actif')}</span>` : ''}
     </td>
     <td><span class="text-muted">${date}</span></td>
     <td style="text-align:center"><span class="badge">${user.sgf_count}</span></td>
@@ -543,7 +605,7 @@
         <div class="table-actions">
             <button class="btn btn-danger btn-del-user"
                 data-id="${user.id}" data-email="${user.email}">
-                Supprimer
+                ${t('admin_users_supprimer')}
             </button>
         </div>
     </td>
@@ -554,20 +616,19 @@
         // Boutons suppression utilisateur
         tbody.querySelectorAll('.btn-del-user').forEach((btn) => {
           btn.addEventListener('click', async () => {
-            if (
-              !confirm(
-                `Supprimer définitivement le compte "${btn.dataset.email}" et toutes ses données ?`
-              )
-            )
-              return;
+            const confirmMsg = t('admin_users_supprimer_confirm', {
+              email: btn.dataset.email,
+            });
+            if (!confirm(confirmMsg)) return;
+
             const { error } = await supabase.rpc('delete_user', {
               target_user_id: btn.dataset.id,
             });
             if (error) {
-              toast('Erreur : ' + error.message, 'error');
+              toast(t('auth_erreur_generique') + error.message, 'error');
               return;
             }
-            toast('Compte supprimé', 'success');
+            toast(t('admin_toast_user_deleted'), 'success');
             chargerDonnees();
           });
         });
@@ -600,13 +661,20 @@
       async function traiterFichiers(files) {
         if (!files.length) return;
         uploadStatus.className = 'loading';
-        uploadStatus.textContent = `Upload en cours (0/${files.length})...`;
+        uploadStatus.textContent = t('admin_upload_en_cours', {
+          current: 0,
+          total: files.length,
+        });
 
         let ok = 0,
           err = 0;
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
-          uploadStatus.textContent = `Upload en cours (${i + 1}/${files.length}) — ${file.name}`;
+          uploadStatus.textContent =
+            t('admin_upload_en_cours', {
+              current: i + 1,
+              total: files.length,
+            }) + ` — ${file.name}`;
           const id = await uploaderSgfPartage(file);
           if (id) ok++;
           else err++;
@@ -614,11 +682,11 @@
 
         if (err === 0) {
           uploadStatus.className = 'success';
-          uploadStatus.textContent = `✓ ${ok} fichier${ok > 1 ? 's' : ''} uploadé${ok > 1 ? 's' : ''} avec succès`;
-          toast(`${ok} SGF partagé${ok > 1 ? 's' : ''}`, 'success');
+          uploadStatus.textContent = t('admin_upload_succes', { count: ok });
+          toast(t('admin_toast_sgf_partages', { count: ok }), 'success');
         } else {
           uploadStatus.className = 'error';
-          uploadStatus.textContent = `${ok} succès, ${err} erreur${err > 1 ? 's' : ''}`;
+          uploadStatus.textContent = t('admin_upload_bilan', { ok, err });
         }
 
         uploadInput.value = '';
@@ -635,8 +703,7 @@
         document.getElementById('nb-partages').textContent = partages.length;
 
         if (partages.length === 0) {
-          container.innerHTML =
-            '<div class="empty-state">Aucun SGF partagé pour l\'instant.</div>';
+          container.innerHTML = `<div class="empty-state">${t('admin_sgf_vide')}</div>`;
           return;
         }
 
@@ -645,9 +712,9 @@
         table.innerHTML = `
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Ajouté le</th>
-                    <th style="text-align:right">Actions</th>
+                    <th>${t('variations_nom')}</th>
+                    <th>${t('admin_sgf_ajoute_le')}</th>
+                    <th style="text-align:right">${t('admin_table_actions')}</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -656,7 +723,9 @@
 
         for (const sgf of partages) {
           const tr = document.createElement('tr');
-          const date = new Date(sgf.created_at).toLocaleDateString('fr-FR');
+          const date = new Date(sgf.created_at).toLocaleDateString(
+            lang === 'fr' ? 'fr-FR' : 'en-US'
+          );
           tr.innerHTML = `
                 <td><span class="text-primary">${sgf.name.replace('.sgf', '')}</span></td>
                 <td><span class="text-muted">${date}</span></td>
@@ -664,7 +733,7 @@
                     <div class="table-actions">
                         <button class="btn btn-danger btn-del"
                             data-id="${sgf.id}" data-path="${sgf.storage_path}" data-name="${sgf.name}">
-                            Supprimer
+                            ${t('admin_sgf_supprimer')}
                         </button>
                     </div>
                 </td>
@@ -677,14 +746,13 @@
 
         container.querySelectorAll('.btn-del').forEach((btn) => {
           btn.addEventListener('click', async () => {
-            if (
-              !confirm(
-                `Supprimer "${btn.dataset.name}" de la bibliothèque partagée ?`
-              )
-            )
-              return;
+            const confirmMsg = t('admin_sgf_supprimer_confirm', {
+              nom: btn.dataset.name,
+            });
+            if (!confirm(confirmMsg)) return;
+
             await supprimerSgfPartage(btn.dataset.id, btn.dataset.path);
-            toast('SGF supprimé', 'success');
+            toast(t('admin_toast_sgf_deleted'), 'success');
             chargerListePartages();
             chargerStats();
           });

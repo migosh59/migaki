@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>磨き Migaki — Nouveau mot de passe</title>
+    <title>磨き Migaki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
@@ -45,6 +45,7 @@
         padding: 40px;
         width: 100%;
         max-width: 400px;
+        position: relative;
       }
 
       .auth-title {
@@ -139,50 +140,91 @@
       .back-link:hover {
         color: var(--or);
       }
+
+      #btn-lang {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(212, 160, 23, 0.08);
+        border: 1px solid rgba(212, 160, 23, 0.2);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        line-height: 1;
+      }
+      #btn-lang:hover {
+        background: rgba(212, 160, 23, 0.18);
+        border-color: var(--or);
+      }
     </style>
   </head>
   <body>
     <div class="auth-box">
+      <button id="btn-lang">🇬🇧</button>
+
       <div class="auth-title">磨き MIGAKI</div>
-      <div class="auth-subtitle">Nouveau mot de passe</div>
+      <div class="auth-subtitle" id="reset-subtitle"></div>
 
       <div id="form-reset">
         <div class="auth-field">
-          <label>Nouveau mot de passe</label>
-          <input
-            type="password"
-            id="new-password"
-            placeholder="8 caractères minimum"
-          />
+          <label id="label-new-password"></label>
+          <input type="password" id="new-password" placeholder="••••••••" />
         </div>
         <div class="auth-field">
-          <label>Confirmer le mot de passe</label>
+          <label id="label-confirm-password"></label>
           <input type="password" id="confirm-password" placeholder="••••••••" />
         </div>
-        <button class="auth-btn" id="btn-reset">Enregistrer</button>
+        <button class="auth-btn" id="btn-reset"></button>
       </div>
 
       <div class="auth-message" id="auth-message"></div>
-      <a href="./auth.html" class="back-link">← Retour à la connexion</a>
+      <a href="./auth.html" class="back-link" id="back-link"></a>
     </div>
 
     <script type="module">
       import { supabase } from './supabase.js';
+      import { initI18n, t, getLang, setLang } from './i18n.js';
+
+      await initI18n();
+      const lang = getLang();
+
+      // ── Traductions ──
+      document.getElementById('reset-subtitle').textContent =
+        t('reset_sous_titre');
+      document.getElementById('label-new-password').textContent =
+        t('reset_nouveau_mdp');
+      document.getElementById('new-password').placeholder = t(
+        'auth_mot_de_passe_placeholder'
+      );
+      document.getElementById('label-confirm-password').textContent = t(
+        'reset_confirmer_mdp'
+      );
+      document.getElementById('btn-reset').textContent = t('reset_btn');
+      document.getElementById('back-link').textContent = t('reset_retour');
+
+      // ── Bouton langue ──
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title =
+        lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () =>
+        setLang(lang === 'fr' ? 'en' : 'fr')
+      );
+
+      // ── Supabase gère le token via onAuthStateChange ──
+      supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          document.getElementById('btn-reset').disabled = false;
+        }
+      });
 
       function showMessage(text, type) {
         const el = document.getElementById('auth-message');
         el.textContent = text;
         el.className = 'auth-message ' + type;
       }
-
-      // Supabase gère le token depuis l'URL automatiquement via onAuthStateChange
-      // On attend que la session soit établie
-      supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'PASSWORD_RECOVERY') {
-          // Session établie, l'utilisateur peut changer son mot de passe
-          document.getElementById('btn-reset').disabled = false;
-        }
-      });
 
       document
         .getElementById('btn-reset')
@@ -191,30 +233,24 @@
           const confirm = document.getElementById('confirm-password').value;
 
           if (!password || !confirm)
-            return showMessage('Remplis tous les champs.', 'error');
+            return showMessage(t('reset_erreur_champs'), 'error');
           if (password.length < 8)
-            return showMessage(
-              'Mot de passe trop court (8 caractères minimum).',
-              'error'
-            );
+            return showMessage(t('reset_erreur_court'), 'error');
           if (password !== confirm)
-            return showMessage(
-              'Les mots de passe ne correspondent pas.',
-              'error'
-            );
+            return showMessage(t('reset_erreur_diff'), 'error');
 
           const btn = document.getElementById('btn-reset');
           btn.disabled = true;
-          btn.textContent = 'Enregistrement...';
+          btn.textContent = t('reset_btn_chargement');
 
           const { error } = await supabase.auth.updateUser({ password });
 
           if (error) {
-            showMessage('Erreur : ' + error.message, 'error');
+            showMessage(t('auth_erreur_generique') + error.message, 'error');
             btn.disabled = false;
-            btn.textContent = 'Enregistrer';
+            btn.textContent = t('reset_btn');
           } else {
-            showMessage('Mot de passe mis à jour ! Redirection...', 'success');
+            showMessage(t('reset_succes'), 'success');
             setTimeout(() => (window.location.href = './index.html'), 2000);
           }
         });

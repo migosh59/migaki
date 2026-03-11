@@ -184,12 +184,10 @@
         color: var(--text-muted);
         letter-spacing: 0.1em;
         margin-top: 4px;
-        /* Ajout de l'animation */
         opacity: 0;
         animation: fadeRise 1.5s ease-out 0.5s forwards;
       }
 
-      /* Définition de l'animation */
       @keyframes fadeRise {
         from {
           opacity: 0;
@@ -237,9 +235,28 @@
         background: var(--surface-3);
       }
 
+      #btn-lang {
+        position: absolute;
+        right: 76px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+        padding: 6px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.22s;
+        line-height: 1;
+      }
+      #btn-lang:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+      }
+
       #btn-logout {
         position: absolute;
-        right: 80px;
+        right: 140px;
         top: 50%;
         transform: translateY(-50%);
         background: var(--surface-2);
@@ -809,7 +826,6 @@
         text-transform: uppercase;
       }
 
-      /* ── Panel Mes SGF ── */
       .btn-upload {
         cursor: pointer;
         background: var(--surface-3);
@@ -892,7 +908,6 @@
         text-align: center;
       }
 
-      /* ── Boutons action ── */
       #boutons-action {
         display: flex;
         gap: 10px;
@@ -936,7 +951,6 @@
         transform: translateY(-1px);
       }
 
-      /* Stats */
       #bloc-statistiques {
         padding: 14px;
       }
@@ -1019,7 +1033,6 @@
         color: var(--text-muted);
       }
 
-      /* Tableau variations */
       #panel-variations {
         display: flex;
         flex-direction: column;
@@ -1224,8 +1237,13 @@
           padding: 5px 9px;
           font-size: 14px;
         }
+        #btn-lang {
+          right: 116px;
+          padding: 5px 7px;
+          font-size: 13px;
+        }
         #btn-logout {
-          right: 70px;
+          right: 152px;
           padding: 5px 9px;
           font-size: 11px;
         }
@@ -1346,12 +1364,13 @@
     <header id="app-header">
       <div class="header-titles">
         <h1>磨き &nbsp;MIGAKI</h1>
-        <div class="subtitle">Polir la pierre, forger l'esprit</div>
+        <div class="subtitle" id="header-subtitle"></div>
       </div>
-      <button id="btn-logout" title="Se déconnecter">⏏ Quitter</button>
+      <button id="btn-logout"></button>
+      <button id="btn-lang"></button>
+      <button id="btn-theme" title="Changer de thème">☀️</button>
       <button
         id="btn-admin"
-        title="Administration"
         style="
           position: absolute;
           left: 18px;
@@ -1369,21 +1388,18 @@
           letter-spacing: 0.05em;
           display: none;
         "
-      >
-        ⚙ Admin
-      </button>
-      <button id="btn-theme" title="Changer de thème">☀️</button>
+      ></button>
     </header>
 
     <div id="layout-principal">
       <div id="colonne-gauche">
         <div id="menu-fichier" style="display: none">
-          <p>Charger un fichier SGF</p>
+          <p id="menu-fichier-titre"></p>
           <div class="file-input-wrapper">
             <input type="file" id="sgf-file" accept=".sgf" />
-            <div class="file-btn">⊕ &nbsp;Ouvrir un SGF</div>
+            <div class="file-btn" id="btn-ouvrir-sgf"></div>
           </div>
-          <div id="file-name-display">Aucun fichier sélectionné</div>
+          <div id="file-name-display"></div>
         </div>
 
         <div
@@ -1394,6 +1410,7 @@
             ⬡
           </div>
           <div
+            id="accueil-titre"
             style="
               font-family: 'Cinzel', serif;
               font-size: 20px;
@@ -1401,25 +1418,21 @@
               color: var(--gold-bright);
               margin-bottom: 12px;
             "
-          >
-            Bienvenue au Dojo
-          </div>
+          ></div>
           <div
+            id="accueil-sous-titre"
             style="
               font-style: italic;
               color: var(--text-muted);
               font-size: 16px;
               line-height: 1.7;
             "
-          >
-            Sélectionnez un SGF dans la bibliothèque<br />pour commencer
-            l'entraînement.
-          </div>
+          ></div>
         </div>
 
         <div id="actions-exercice">
           <div id="barre-controles">
-            <span id="camp-label">Joueur</span>
+            <span id="camp-label"></span>
             <div
               id="select-couleur-joueur"
               class="custom-select"
@@ -1427,15 +1440,17 @@
             >
               <div class="custom-select-trigger">
                 <span class="stone-icon stone-noir"></span>
-                <span class="stone-label">Noir</span>
+                <span class="stone-label" id="stone-label-noir"></span>
                 <span class="select-arrow">▾</span>
               </div>
               <div class="custom-select-dropdown">
                 <div class="custom-option selected" data-value="1">
-                  <span class="stone-icon stone-noir"></span> Noir
+                  <span class="stone-icon stone-noir"></span>
+                  <span id="option-noir"></span>
                 </div>
                 <div class="custom-option" data-value="-1">
-                  <span class="stone-icon stone-blanc"></span> Blanc
+                  <span class="stone-icon stone-blanc"></span>
+                  <span id="option-blanc"></span>
                 </div>
               </div>
             </div>
@@ -1444,14 +1459,14 @@
               <div class="vie" id="vie-2"></div>
               <div class="vie" id="vie-3"></div>
             </div>
-            <button id="btn-son" title="Activer/désactiver le son">🔊</button>
-            <button id="btn-solution">Abandonner</button>
+            <button id="btn-son">🔊</button>
+            <button id="btn-solution"></button>
           </div>
         </div>
 
         <div id="info-variation">
-          <div id="info-nom">Séquence en cours...</div>
-          <div id="info-comment">Joue pour découvrir la suite !</div>
+          <div id="info-nom"></div>
+          <div id="info-comment"></div>
         </div>
 
         <div id="goban-wrapper" style="display: none">
@@ -1466,17 +1481,16 @@
               <h2 id="titre-fin">—</h2>
               <p id="sous-titre-fin"></p>
             </div>
-            <button id="btn-suivante">Suivant →</button>
+            <button id="btn-suivante"></button>
           </div>
         </div>
       </div>
 
       <div id="colonne-droite">
-        <!-- Panel Mes SGF -->
         <div class="panel" id="panel-sgf">
           <div class="panel-header">
-            <span class="panel-title">Mes SGF</span>
-            <label class="btn-upload" title="Uploader un SGF">
+            <span class="panel-title" id="panel-sgf-titre"></span>
+            <label class="btn-upload" id="label-upload">
               ＋
               <input
                 type="file"
@@ -1487,22 +1501,18 @@
             </label>
           </div>
           <div id="liste-sgf">
-            <div id="liste-sgf-vide">Chargement...</div>
+            <div id="liste-sgf-vide"></div>
           </div>
         </div>
 
         <div id="boutons-action">
-          <button id="btn-mode-presentation" class="btn-action">
-            ▶ &nbsp;Présentation
-          </button>
-          <button id="btn-reset" class="btn-action">
-            ↺ &nbsp;Réinitialiser
-          </button>
+          <button id="btn-mode-presentation" class="btn-action"></button>
+          <button id="btn-reset" class="btn-action"></button>
         </div>
 
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Progression globale</span>
+            <span class="panel-title" id="panel-progression-titre"></span>
           </div>
           <div id="bloc-statistiques">
             <div id="barre-progression-globale">
@@ -1526,22 +1536,22 @@
               <div class="stat-card s-gris">
                 <span class="stat-emoji">⚪</span>
                 <span class="stat-pct" id="stat-gris">0%</span>
-                <span class="stat-label">Non exploré</span>
+                <span class="stat-label" id="stat-label-gris"></span>
               </div>
               <div class="stat-card s-rouge">
                 <span class="stat-emoji">🔴</span>
                 <span class="stat-pct" id="stat-rouge">0%</span>
-                <span class="stat-label">Échec</span>
+                <span class="stat-label" id="stat-label-rouge"></span>
               </div>
               <div class="stat-card s-orange">
                 <span class="stat-emoji">🟠</span>
                 <span class="stat-pct" id="stat-orange">0%</span>
-                <span class="stat-label">Erreurs</span>
+                <span class="stat-label" id="stat-label-orange"></span>
               </div>
               <div class="stat-card s-vert">
                 <span class="stat-emoji">🟢</span>
                 <span class="stat-pct" id="stat-vert">0%</span>
-                <span class="stat-label">Parfait</span>
+                <span class="stat-label" id="stat-label-vert"></span>
               </div>
             </div>
           </div>
@@ -1549,7 +1559,7 @@
 
         <div class="panel" id="panel-variations">
           <div class="panel-header">
-            <span class="panel-title">Variations</span>
+            <span class="panel-title" id="panel-variations-titre"></span>
             <span
               id="nb-variations"
               style="font-size: 11px; color: var(--text-muted)"
@@ -1559,9 +1569,9 @@
             <table id="table-variations">
               <thead>
                 <tr>
-                  <th style="width: 34px; text-align: center">État</th>
-                  <th>Nom</th>
-                  <th style="width: 36px; text-align: center">Voir</th>
+                  <th id="th-etat" style="width: 34px; text-align: center"></th>
+                  <th id="th-nom"></th>
+                  <th id="th-voir" style="width: 36px; text-align: center"></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -1573,7 +1583,8 @@
       </div>
     </div>
 
-    <button id="btn-quitter-presentation">✕ Quitter</button>
+    <button id="btn-quitter-presentation"></button>
+    <div id="sync-indicator"></div>
 
     <script src="app.js"></script>
     <script type="module">
@@ -1588,6 +1599,70 @@
         isAdmin,
         getUser,
       } from './supabase.js';
+      import { initI18n, t, getLang, setLang } from './i18n.js';
+
+      // ── i18n ──
+      await initI18n();
+      const lang = getLang();
+
+      // ── Traductions statiques ──
+      document.getElementById('header-subtitle').textContent = t('sous_titre');
+      document.getElementById('menu-fichier-titre').textContent = t(
+        'bibliotheque_mes_sgf'
+      );
+      document.getElementById('btn-ouvrir-sgf').innerHTML =
+        '⊕ &nbsp;' + t('ouvrir_sgf');
+      document.getElementById('accueil-titre').textContent =
+        t('bienvenue_titre');
+      document.getElementById('accueil-sous-titre').textContent =
+        t('bienvenue_texte');
+      document.getElementById('camp-label').textContent = t('joueur_label');
+      document.getElementById('stone-label-noir').textContent =
+        t('couleur_noir');
+      document.getElementById('option-noir').textContent = t('couleur_noir');
+      document.getElementById('option-blanc').textContent = t('couleur_blanc');
+      document.getElementById('btn-solution').textContent = t('btn_abandonner');
+      document.getElementById('info-nom').textContent = t('sequence_en_cours');
+      document.getElementById('info-comment').textContent = t(
+        'joue_pour_decouvrir'
+      );
+      document.getElementById('btn-suivante').textContent = t('btn_suivant');
+      document.getElementById('panel-sgf-titre').textContent = t(
+        'bibliotheque_mes_sgf'
+      );
+      const msgVide = document.getElementById('liste-sgf-vide');
+      if (msgVide) msgVide.textContent = t('admin_chargement');
+      document.getElementById('btn-mode-presentation').innerHTML =
+        '▶ &nbsp;' + t('btn_presentation');
+      document.getElementById('btn-reset').innerHTML =
+        '↺ &nbsp;' + t('btn_reinitialiser');
+      document.getElementById('panel-progression-titre').textContent =
+        t('progression_titre');
+      document.getElementById('stat-label-gris').textContent =
+        t('stat_non_explore');
+      document.getElementById('stat-label-rouge').textContent = t('stat_echec');
+      document.getElementById('stat-label-orange').textContent =
+        t('stat_erreurs');
+      document.getElementById('stat-label-vert').textContent =
+        t('stat_parfait');
+      document.getElementById('panel-variations-titre').textContent =
+        t('variations_titre');
+      document.getElementById('th-etat').textContent = t('variations_etat');
+      document.getElementById('th-nom').textContent = t('variations_nom');
+      document.getElementById('th-voir').textContent = t('variations_voir');
+      document.getElementById('btn-quitter-presentation').textContent =
+        '✕ ' + t('btn_quitter_presentation');
+      document.getElementById('btn-son').title = t('son_titre');
+      document.getElementById('btn-admin').textContent = t('header_admin');
+
+      // ── Bouton langue ──
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title =
+        lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () =>
+        setLang(lang === 'fr' ? 'en' : 'fr')
+      );
 
       // ── État session ──
       const user = await getUser();
@@ -1603,7 +1678,6 @@
         span.textContent = '⛩ ' + pseudo;
         headerTitles.appendChild(span);
 
-        // Bouton admin
         isAdmin().then((admin) => {
           if (admin) {
             const btn = document.getElementById('btn-admin');
@@ -1615,8 +1689,8 @@
           }
         });
 
-        // Déconnexion
-        document.getElementById('btn-logout').textContent = '⏏ Quitter';
+        document.getElementById('btn-logout').textContent = t('header_quitter');
+        document.getElementById('btn-logout').title = t('deconnexion_title');
         document
           .getElementById('btn-logout')
           .addEventListener('click', async () => {
@@ -1624,25 +1698,21 @@
             window.location.href = './auth.html';
           });
       } else {
-        // Invité : bouton connexion
-        document.getElementById('btn-logout').textContent = '⛩ Connexion';
+        document.getElementById('btn-logout').textContent =
+          t('header_connexion');
+        document.getElementById('btn-logout').title = t('connexion_title');
         document.getElementById('btn-logout').addEventListener('click', () => {
           window.location.href = './auth.html';
         });
 
-        // Bandeau invité dans le panel SGF
-        const panelHeader = document.querySelector('#panel-sgf .panel-header');
-        panelHeader.querySelector('.panel-title').textContent = 'Bibliothèque';
+        document.getElementById('panel-sgf-titre').textContent =
+          t('bibliotheque_titre');
+        document.getElementById('label-upload').style.display = 'none';
 
-        // Masquer le bouton upload
-        document.querySelector('.btn-upload').style.display = 'none';
-
-        // Ajouter un bandeau sous la liste
         const bandeau = document.createElement('div');
         bandeau.style.cssText =
           'padding: 10px 14px; background: rgba(212,160,23,0.06); border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; font-style: italic;';
-        bandeau.innerHTML =
-          '<a href="./auth.html" style="color: var(--gold); text-decoration: none;">Créer un compte</a> pour uploader vos propres SGF';
+        bandeau.innerHTML = `<a href="./auth.html" style="color: var(--gold); text-decoration: none;">${t('bibliotheque_creer_compte')}</a>${t('bibliotheque_creer_compte_texte')}`;
         document.getElementById('panel-sgf').appendChild(bandeau);
       }
 
@@ -1650,7 +1720,6 @@
       let sgfActifId = null;
       let sgfActifPath = null;
 
-      // ── Afficher la colonne droite ──
       document.getElementById('colonne-droite').style.display = 'flex';
 
       // ── Charger et afficher la liste des SGF ──
@@ -1661,8 +1730,8 @@
 
         if (liste.length === 0) {
           container.innerHTML = estConnecte
-            ? '<div id="liste-sgf-vide">Aucun SGF — uploadez-en un ＋</div>'
-            : '<div id="liste-sgf-vide">Aucun SGF partagé disponible.</div>';
+            ? `<div id="liste-sgf-vide">${t('bibliotheque_vide_connecte')}</div>`
+            : `<div id="liste-sgf-vide">${t('bibliotheque_vide_invite')}</div>`;
           return;
         }
 
@@ -1685,18 +1754,20 @@
           if (sgf.is_shared) {
             const tag = document.createElement('span');
             tag.className = 'sgf-item-shared';
-            tag.textContent = 'partagé';
+            tag.textContent = t('bibliotheque_partage');
             item.appendChild(tag);
           }
 
           if (estConnecte && !sgf.is_shared) {
             const btnDel = document.createElement('button');
             btnDel.className = 'sgf-item-delete';
-            btnDel.title = 'Supprimer';
+            btnDel.title = t('supprimer');
             btnDel.textContent = '✕';
             btnDel.addEventListener('click', async (e) => {
               e.stopPropagation();
-              if (!confirm(`Supprimer "${sgf.name}" et toute sa progression ?`))
+              if (
+                !confirm(t('bibliotheque_supprimer_confirm', { nom: sgf.name }))
+              )
                 return;
               await supprimerSgf(sgf.id, sgf.storage_path);
               if (sgfActifId === sgf.id) {
@@ -1729,7 +1800,6 @@
         const item = document.querySelector(`.sgf-item[data-id="${sgf.id}"]`);
         if (item) item.classList.add('active');
 
-        // Progression : Supabase si connecté, localStorage si invité
         let progression = {};
         if (estConnecte) {
           progression = await chargerProgression(sgf.id);
@@ -1758,7 +1828,7 @@
             this.value = '';
             const id = await uploaderSgf(file);
             if (!id) {
-              alert("Erreur lors de l'upload.");
+              alert(t('erreur_upload'));
               return;
             }
             await rafraichirListeSgf();
@@ -1775,14 +1845,13 @@
 
         if (estConnecte) {
           const indicator = document.getElementById('sync-indicator');
-          indicator.textContent = '↑ Sauvegarde...';
+          indicator.textContent = t('sync_sauvegarde');
           indicator.className = 'saving';
           await sauvegarderVariation(sgfActifId, sig, statut, nom, commentaire);
-          indicator.textContent = '✓ Sauvegardé';
+          indicator.textContent = t('sync_sauvegarde_ok');
           indicator.className = 'saved';
           setTimeout(() => (indicator.className = ''), 2000);
         } else {
-          // Invité : sauvegarde en localStorage
           const key = `progression_${sgfActifId}`;
           let progression = {};
           try {
@@ -1796,6 +1865,5 @@
       // ── Init ──
       rafraichirListeSgf();
     </script>
-    <div id="sync-indicator">✓ Sauvegardé</div>
   </body>
 </html>

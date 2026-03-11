@@ -8,7 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
       rel="stylesheet"
     />
-    <title>磨き Migaki — Connexion</title>
+    <title>磨き Migaki</title>
     <style>
       :root {
         --or: #d4a017;
@@ -43,6 +43,7 @@
         padding: 40px;
         width: 100%;
         max-width: 400px;
+        position: relative;
       }
       .auth-title {
         font-family: var(--font-titre);
@@ -115,13 +116,9 @@
         margin-top: 8px;
         transition: opacity 0.2s;
       }
-      .auth-btn:hover {
-        opacity: 0.85;
-      }
-      .auth-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
+      .auth-btn:hover { opacity: 0.85; }
+      .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
       .auth-message {
         margin-top: 16px;
         padding: 10px 14px;
@@ -129,76 +126,73 @@
         font-size: 0.9rem;
         display: none;
       }
-      .auth-message.error {
-        background: #3a1010;
-        color: #ff6b6b;
-        display: block;
+      .auth-message.error   { background: #3a1010; color: #ff6b6b; display: block; }
+      .auth-message.success { background: #0f2a1a; color: #51cf66; display: block; }
+
+      #btn-lang {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(212, 160, 23, 0.08);
+        border: 1px solid rgba(212, 160, 23, 0.2);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        line-height: 1;
       }
-      .auth-message.success {
-        background: #0f2a1a;
-        color: #51cf66;
-        display: block;
+      #btn-lang:hover {
+        background: rgba(212, 160, 23, 0.18);
+        border-color: var(--or);
       }
     </style>
   </head>
   <body>
     <div class="auth-container">
       <div class="auth-box">
+        <button id="btn-lang">🇬🇧</button>
+
         <div class="auth-title">磨き MIGAKI</div>
-        <div class="auth-subtitle">Polir la pierre, forger l'esprit</div>
+        <div class="auth-subtitle" id="auth-subtitle"></div>
 
         <div class="auth-tabs">
-          <button class="auth-tab active" id="tab-login">Connexion</button>
-          <button class="auth-tab" id="tab-signup">Inscription</button>
+          <button class="auth-tab active" id="tab-login"></button>
+          <button class="auth-tab" id="tab-signup"></button>
         </div>
 
         <div id="form-login">
           <div class="auth-field">
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="ton@email.com" />
+            <label id="label-login-email"></label>
+            <input type="email" id="login-email" />
           </div>
           <div class="auth-field">
-            <label>Mot de passe</label>
+            <label id="label-login-password"></label>
             <input type="password" id="login-password" placeholder="••••••••" />
           </div>
-          <button class="auth-btn" id="btn-login">Se connecter</button>
+          <button class="auth-btn" id="btn-login"></button>
         </div>
         <div style="text-align: center; margin-top: 14px">
-          <a
-            href="#"
-            id="lien-forgot"
-            style="font-size: 0.85rem; color: #a09070; text-decoration: none"
-          >
-            Mot de passe oublié ?
-          </a>
+          <a href="#" id="lien-forgot" style="font-size: 0.85rem; color: #a09070; text-decoration: none"></a>
         </div>
 
         <div id="form-signup" style="display: none">
           <div class="auth-field">
-            <label>Email</label>
-            <input type="email" id="signup-email" placeholder="ton@email.com" />
+            <label id="label-signup-email"></label>
+            <input type="email" id="signup-email" />
           </div>
           <div class="auth-field">
-            <label>Mot de passe</label>
-            <input
-              type="password"
-              id="signup-password"
-              placeholder="8 caractères minimum"
-            />
+            <label id="label-signup-password"></label>
+            <input type="password" id="signup-password" />
           </div>
           <div class="auth-field">
-            <input
-              type="password"
-              id="register-password-confirm"
-              placeholder="Confirmer le mot de passe"
-              required
-            />
+            <input type="password" id="register-password-confirm" required />
           </div>
           <div class="auth-field">
-            <label>Pseudo</label>
-            <input type="text" id="signup-pseudo" placeholder="Ton pseudo" />
+            <label id="label-signup-pseudo"></label>
+            <input type="text" id="signup-pseudo" />
           </div>
-          <button class="auth-btn" id="btn-signup">Créer mon compte</button>
+          <button class="auth-btn" id="btn-signup"></button>
         </div>
 
         <div class="auth-message" id="auth-message"></div>
@@ -207,17 +201,43 @@
 
     <script type="module">
       import { supabase } from './supabase.js';
+      import { initI18n, t, getLang, setLang } from './i18n.js';
 
-      // Redirect si déjà connecté
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      await initI18n();
+      const lang = getLang();
+
+      // ── Traductions ──
+      document.getElementById('auth-subtitle').textContent             = t('auth_sous_titre');
+      document.getElementById('tab-login').textContent                 = t('auth_tab_connexion');
+      document.getElementById('tab-signup').textContent                = t('auth_tab_inscription');
+      document.getElementById('label-login-email').textContent         = t('auth_email');
+      document.getElementById('label-login-password').textContent      = t('auth_mot_de_passe');
+      document.getElementById('btn-login').textContent                 = t('auth_btn_connexion');
+      document.getElementById('lien-forgot').textContent               = t('auth_mdp_oublie');
+      document.getElementById('label-signup-email').textContent        = t('auth_email');
+      document.getElementById('label-signup-password').textContent     = t('auth_mot_de_passe');
+      document.getElementById('label-signup-pseudo').textContent       = t('auth_pseudo');
+      document.getElementById('btn-signup').textContent                = t('auth_btn_inscription');
+      document.getElementById('login-email').placeholder               = t('auth_email_placeholder');
+      document.getElementById('signup-email').placeholder              = t('auth_email_placeholder');
+      document.getElementById('signup-password').placeholder           = t('auth_mot_de_passe_placeholder');
+      document.getElementById('register-password-confirm').placeholder = t('auth_confirmer_mdp_placeholder');
+      document.getElementById('signup-pseudo').placeholder             = t('auth_pseudo_placeholder');
+
+      // ── Bouton langue ──
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title = lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () => setLang(lang === 'fr' ? 'en' : 'fr'));
+
+      // ── Redirect si déjà connecté ──
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) window.location.href = './index.html';
 
-      // Tabs
-      const tabLogin = document.getElementById('tab-login');
-      const tabSignup = document.getElementById('tab-signup');
-      const formLogin = document.getElementById('form-login');
+      // ── Tabs ──
+      const tabLogin   = document.getElementById('tab-login');
+      const tabSignup  = document.getElementById('tab-signup');
+      const formLogin  = document.getElementById('form-login');
       const formSignup = document.getElementById('form-signup');
 
       tabLogin.addEventListener('click', () => {
@@ -244,88 +264,71 @@
         document.getElementById('auth-message').className = 'auth-message';
       }
 
-      // Connexion
-      document
-        .getElementById('btn-login')
-        .addEventListener('click', async () => {
-          const email = document.getElementById('login-email').value.trim();
-          const password = document.getElementById('login-password').value;
-          if (!email || !password)
-            return showMessage('Remplis tous les champs.', 'error');
+      // ── Connexion ──
+      document.getElementById('btn-login').addEventListener('click', async () => {
+        const email    = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+        if (!email || !password) return showMessage(t('auth_erreur_champs'), 'error');
 
-          const btn = document.getElementById('btn-login');
-          btn.disabled = true;
-          btn.textContent = 'Connexion...';
+        const btn = document.getElementById('btn-login');
+        btn.disabled = true;
+        btn.textContent = t('auth_btn_connexion_chargement');
 
-          const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-          if (error) {
-            showMessage('Email ou mot de passe incorrect.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Se connecter';
-          } else {
-            window.location.href = './index.html';
-          }
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          showMessage(t('auth_erreur_connexion'), 'error');
+          btn.disabled = false;
+          btn.textContent = t('auth_btn_connexion');
+        } else {
+          window.location.href = './index.html';
+        }
+      });
+
+      // ── Inscription ──
+      document.getElementById('btn-signup').addEventListener('click', async () => {
+        const email    = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const pseudo   = document.getElementById('signup-pseudo').value.trim();
+        const confirm  = document.getElementById('register-password-confirm').value;
+
+        if (!email || !password || !pseudo) return showMessage(t('auth_erreur_champs'), 'error');
+        if (password.length < 8) return showMessage(t('auth_erreur_mdp_court'), 'error');
+        if (password !== confirm) {
+          showMessage(t('auth_erreur_mdp_diff'), 'error');
+          return;
+        }
+
+        const btn = document.getElementById('btn-signup');
+        btn.disabled = true;
+        btn.textContent = t('auth_btn_inscription_chargement');
+
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { pseudo, lang: getLang() } },
+        });
+        if (error) {
+          showMessage(t('auth_erreur_generique') + error.message, 'error');
+          btn.disabled = false;
+          btn.textContent = t('auth_btn_inscription');
+        } else {
+          showMessage(t('auth_succes_inscription'), 'success');
+        }
+      });
+
+      // ── Mot de passe oublié ──
+      document.getElementById('lien-forgot').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim();
+        if (!email) return showMessage(t('auth_email_dabord'), 'error');
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + '/reset.html',
         });
 
-      // Inscription
-      document
-        .getElementById('btn-signup')
-        .addEventListener('click', async () => {
-          const email = document.getElementById('signup-email').value.trim();
-          const password = document.getElementById('signup-password').value;
-          const pseudo = document.getElementById('signup-pseudo').value.trim();
-          if (!email || !password || !pseudo)
-            return showMessage('Remplis tous les champs.', 'error');
-          if (password.length < 8)
-            return showMessage('Mot de passe trop court (8 min).', 'error');
-
-          const btn = document.getElementById('btn-signup');
-          btn.disabled = true;
-          btn.textContent = 'Création...';
-
-          const confirm = document.getElementById(
-            'register-password-confirm'
-          ).value;
-          if (password !== confirm) {
-            showMessage('Les mots de passe ne correspondent pas.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Créer mon compte';
-            return;
-          }
-
-          const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { pseudo } },
-          });
-          if (error) {
-            showMessage(error.message, 'error');
-            btn.disabled = false;
-            btn.textContent = 'Créer mon compte';
-          } else {
-            showMessage(
-              'Compte créé ! Vérifie ton email pour confirmer.',
-              'success'
-            );
-          }
-        });
-      document
-        .getElementById('lien-forgot')
-        .addEventListener('click', async (e) => {
-          e.preventDefault();
-          const email = document.getElementById('login-email').value.trim();
-          if (!email) return showMessage("Entre ton email d'abord.", 'error');
-
-          const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/reset.html',
-          });
-
-          if (error) showMessage('Erreur : ' + error.message, 'error');
-          else showMessage('Email envoyé ! Vérifie ta boîte mail.', 'success');
-        });
+        if (error) showMessage(t('auth_erreur_generique') + error.message, 'error');
+        else showMessage(t('auth_succes_email_envoye'), 'success');
+      });
     </script>
   </body>
 </html>
