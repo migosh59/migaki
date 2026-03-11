@@ -441,6 +441,7 @@ function animerProchainCoup() {
 }
 
 function lancerPresentation() {
+  if (toutesLesVariations.length === 0) return; /* Sécurité anti-écran noir */
   arreterTout();
   document.body.classList.add('mode-presentation');
   redimensionnerGoban(
@@ -822,6 +823,11 @@ function chargerContenuSgf(contenu, nom, sgfId, progressionServeur) {
   colonneDroite.style.display = 'flex';
   infoVariation.style.display = 'block';
   gobanWrapper.style.display = 'flex';
+
+  /* On réactive les boutons d'action */
+  btnModePresentation.disabled = false;
+  btnReset.disabled = false;
+
   redimensionnerGoban(calculerTailleGoban());
   afficherTableau();
   mettreAJourStatistiques();
