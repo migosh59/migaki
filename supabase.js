@@ -21,7 +21,22 @@ export async function getUser() {
 /* ─── SGF Files ─────────────────────────────── */
 export async function listerSgf() {
   const user = await getUser();
-  if (!user) return [];
+
+  if (!user) {
+    // Invité : uniquement les SGF partagés
+    const { data, error } = await supabase
+      .from('sgf_files')
+      .select('*')
+      .eq('is_shared', true)
+      .order('name', { ascending: true });
+    if (error) {
+      console.error(error);
+      return [];
+    }
+    return data || [];
+  }
+
+  // Connecté : SGF personnels + partagés
   const { data, error } = await supabase
     .from('sgf_files')
     .select('*')
@@ -30,7 +45,7 @@ export async function listerSgf() {
     console.error(error);
     return [];
   }
-  return data;
+  return data || [];
 }
 
 export async function uploaderSgf(file) {
@@ -83,6 +98,22 @@ export async function uploaderSgf(file) {
 }
 
 export async function telechargerSgf(storagePath) {
+  const user = await getUser();
+
+  if (!user) {
+    // Invité : URL signée temporaire (1 heure)
+    const { data, error } = await supabase.storage
+      .from('sgf-files')
+      .createSignedUrl(storagePath, 3600);
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    const response = await fetch(data.signedUrl);
+    return await response.text();
+  }
+
+  // Connecté : téléchargement direct
   const { data, error } = await supabase.storage
     .from('sgf-files')
     .download(storagePath);

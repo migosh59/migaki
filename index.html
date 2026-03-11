@@ -1,12 +1,5 @@
 <!doctype html>
 <html lang="fr" data-theme="dark">
-  <script type="module">
-    import { supabase } from './supabase.js';
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) window.location.href = './auth.html';
-  </script>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1419,7 +1412,7 @@
               line-height: 1.7;
             "
           >
-            Sélectionnez un SGF dans votre bibliothèque<br />pour commencer
+            Sélectionnez un SGF dans la bibliothèque<br />pour commencer
             l'entraînement.
           </div>
         </div>
@@ -1593,24 +1586,15 @@
         chargerProgression,
         sauvegarderVariation,
         isAdmin,
+        getUser,
       } from './supabase.js';
 
-      // Afficher le bouton admin si nécessaire
-      isAdmin().then((admin) => {
-        if (admin) {
-          const btn = document.getElementById('btn-admin');
-          btn.style.display = 'block';
-          btn.addEventListener(
-            'click',
-            () => (window.location.href = './admin.html')
-          );
-        }
-      });
-      // Afficher le pseudo
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
+      // ── État session ──
+      const user = await getUser();
+      const estConnecte = !!user;
+
+      // ── Header selon session ──
+      if (estConnecte) {
         const pseudo = user.user_metadata?.pseudo || user.email.split('@')[0];
         const headerTitles = document.querySelector('.header-titles');
         const span = document.createElement('div');
@@ -1618,21 +1602,55 @@
           'font-size:12px; color:var(--text-muted); margin-top:2px; font-style:italic; letter-spacing:0.05em;';
         span.textContent = '⛩ ' + pseudo;
         headerTitles.appendChild(span);
-      }
 
-      // Déconnexion
-      document
-        .getElementById('btn-logout')
-        .addEventListener('click', async () => {
-          await supabase.auth.signOut();
+        // Bouton admin
+        isAdmin().then((admin) => {
+          if (admin) {
+            const btn = document.getElementById('btn-admin');
+            btn.style.display = 'block';
+            btn.addEventListener(
+              'click',
+              () => (window.location.href = './admin.html')
+            );
+          }
+        });
+
+        // Déconnexion
+        document.getElementById('btn-logout').textContent = '⏏ Quitter';
+        document
+          .getElementById('btn-logout')
+          .addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = './auth.html';
+          });
+      } else {
+        // Invité : bouton connexion
+        document.getElementById('btn-logout').textContent = '⛩ Connexion';
+        document.getElementById('btn-logout').addEventListener('click', () => {
           window.location.href = './auth.html';
         });
+
+        // Bandeau invité dans le panel SGF
+        const panelHeader = document.querySelector('#panel-sgf .panel-header');
+        panelHeader.querySelector('.panel-title').textContent = 'Bibliothèque';
+
+        // Masquer le bouton upload
+        document.querySelector('.btn-upload').style.display = 'none';
+
+        // Ajouter un bandeau sous la liste
+        const bandeau = document.createElement('div');
+        bandeau.style.cssText =
+          'padding: 10px 14px; background: rgba(212,160,23,0.06); border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; font-style: italic;';
+        bandeau.innerHTML =
+          '<a href="./auth.html" style="color: var(--gold); text-decoration: none;">Créer un compte</a> pour uploader vos propres SGF';
+        document.getElementById('panel-sgf').appendChild(bandeau);
+      }
 
       // ── État SGF actif ──
       let sgfActifId = null;
       let sgfActifPath = null;
 
-      // ── Afficher la colonne droite dès le chargement ──
+      // ── Afficher la colonne droite ──
       document.getElementById('colonne-droite').style.display = 'flex';
 
       // ── Charger et afficher la liste des SGF ──
@@ -1642,10 +1660,9 @@
         container.innerHTML = '';
 
         if (liste.length === 0) {
-          container.innerHTML =
-            '<div id="liste-sgf-vide">Aucun SGF — uploadez-en un ＋</div>';
-          document.getElementById('message-accueil').style.display =
-            liste.length === 0 ? 'none' : 'block';
+          container.innerHTML = estConnecte
+            ? '<div id="liste-sgf-vide">Aucun SGF — uploadez-en un ＋</div>'
+            : '<div id="liste-sgf-vide">Aucun SGF partagé disponible.</div>';
           return;
         }
 
@@ -1672,7 +1689,7 @@
             item.appendChild(tag);
           }
 
-          if (!sgf.is_shared) {
+          if (estConnecte && !sgf.is_shared) {
             const btnDel = document.createElement('button');
             btnDel.className = 'sgf-item-delete';
             btnDel.title = 'Supprimer';
@@ -1706,17 +1723,24 @@
         window._sgfActifId = sgf.id;
         sgfActifPath = sgf.storage_path;
 
-        // Mettre à jour l'UI liste
         document
           .querySelectorAll('.sgf-item')
           .forEach((el) => el.classList.remove('active'));
         const item = document.querySelector(`.sgf-item[data-id="${sgf.id}"]`);
         if (item) item.classList.add('active');
 
-        // Charger la progression depuis Supabase
-        const progression = await chargerProgression(sgf.id);
+        // Progression : Supabase si connecté, localStorage si invité
+        let progression = {};
+        if (estConnecte) {
+          progression = await chargerProgression(sgf.id);
+        } else {
+          const local = localStorage.getItem(`progression_${sgf.id}`);
+          if (local)
+            try {
+              progression = JSON.parse(local);
+            } catch {}
+        }
 
-        // Injecter dans app.js via l'événement personnalisé
         window.dispatchEvent(
           new CustomEvent('sgf-charge', {
             detail: { contenu, nom: sgf.name, sgfId: sgf.id, progression },
@@ -1724,39 +1748,49 @@
         );
       }
 
-      // ── Upload d'un nouveau SGF ──
-      document
-        .getElementById('sgf-upload')
-        .addEventListener('change', async function () {
-          if (!this.files.length) return;
-          const file = this.files[0];
-          this.value = '';
+      // ── Upload (connectés seulement) ──
+      if (estConnecte) {
+        document
+          .getElementById('sgf-upload')
+          .addEventListener('change', async function () {
+            if (!this.files.length) return;
+            const file = this.files[0];
+            this.value = '';
+            const id = await uploaderSgf(file);
+            if (!id) {
+              alert("Erreur lors de l'upload.");
+              return;
+            }
+            await rafraichirListeSgf();
+            const liste = await listerSgf();
+            const sgf = liste.find((s) => s.id === id);
+            if (sgf) chargerSgfDepuisServeur(sgf);
+          });
+      }
 
-          const id = await uploaderSgf(file);
-          if (!id) {
-            alert("Erreur lors de l'upload.");
-            return;
-          }
-
-          await rafraichirListeSgf();
-
-          // Charger automatiquement le SGF uploadé
-          const liste = await listerSgf();
-          const sgf = liste.find((s) => s.id === id);
-          if (sgf) chargerSgfDepuisServeur(sgf);
-        });
-
-      // ── Sauvegarder la progression depuis app.js ──
+      // ── Sauvegarder la progression ──
       window.addEventListener('sauvegarder-variation', async (e) => {
         if (!sgfActifId) return;
-        const indicator = document.getElementById('sync-indicator');
-        indicator.textContent = '↑ Sauvegarde...';
-        indicator.className = 'saving';
         const { sig, statut, nom, commentaire } = e.detail;
-        await sauvegarderVariation(sgfActifId, sig, statut, nom, commentaire);
-        indicator.textContent = '✓ Sauvegardé';
-        indicator.className = 'saved';
-        setTimeout(() => (indicator.className = ''), 2000);
+
+        if (estConnecte) {
+          const indicator = document.getElementById('sync-indicator');
+          indicator.textContent = '↑ Sauvegarde...';
+          indicator.className = 'saving';
+          await sauvegarderVariation(sgfActifId, sig, statut, nom, commentaire);
+          indicator.textContent = '✓ Sauvegardé';
+          indicator.className = 'saved';
+          setTimeout(() => (indicator.className = ''), 2000);
+        } else {
+          // Invité : sauvegarde en localStorage
+          const key = `progression_${sgfActifId}`;
+          let progression = {};
+          try {
+            progression = JSON.parse(localStorage.getItem(key) || '{}');
+          } catch {}
+          progression[sig] = { statut, nom, commentaire };
+          localStorage.setItem(key, JSON.stringify(progression));
+        }
       });
 
       // ── Init ──
