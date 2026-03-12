@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>磨き Migaki — Legal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #d4a017;
+        --gold-bright: #f0c040;
+        --surface-1: #18150f;
+        --surface-2: #22201a;
+        --text-primary: #e8dfc8;
+        --text-secondary: #a09070;
+        --text-muted: #5a5040;
+        --border: rgba(212, 160, 23, 0.14);
+        --border-strong: rgba(212, 160, 23, 0.3);
+        --radius: 6px;
+      }
+
+      body {
+        font-family: 'Crimson Pro', Georgia, serif;
+        background: #0c0b08;
+        color: var(--text-primary);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 15% 40%,
+            rgba(139, 105, 20, 0.05) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 85% 15%,
+            rgba(92, 68, 9, 0.03) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      header {
+        text-align: center;
+        padding: 40px 20px;
+        border-bottom: 1px solid var(--border-strong);
+        background: rgba(212, 160, 23, 0.04);
+        position: relative;
+        z-index: 1;
+      }
+
+      header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 32px;
+        letter-spacing: 0.15em;
+        color: var(--gold-bright);
+        margin: 0 0 8px 0;
+      }
+
+      header p {
+        font-style: italic;
+        color: var(--text-muted);
+        letter-spacing: 0.1em;
+        margin: 0;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .legal-section {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px;
+        margin-bottom: 32px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      h2 {
+        font-family: 'Cinzel', serif;
+        font-size: 18px;
+        letter-spacing: 0.1em;
+        color: var(--gold);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      h3 {
+        font-family: 'Cinzel', serif;
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-top: 24px;
+        margin-bottom: 8px;
+        letter-spacing: 0.05em;
+      }
+
+      p,
+      ul {
+        color: var(--text-primary);
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      a {
+        color: var(--gold-bright);
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+
+      a:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+      }
+
+      .btn-retour {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 24px;
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        color: var(--text-secondary);
+        font-family: 'Cinzel', serif;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        transition: all 0.22s;
+        margin-bottom: 40px;
+      }
+
+      .btn-retour:hover {
+        border-color: var(--gold);
+        color: var(--gold-bright);
+        background: var(--surface-1);
+      }
+
+      /* Bouton de langue identique aux autres pages */
+      #btn-lang {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(212, 160, 23, 0.08);
+        border: 1px solid rgba(212, 160, 23, 0.2);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        line-height: 1;
+      }
+      #btn-lang:hover {
+        background: rgba(212, 160, 23, 0.18);
+        border-color: var(--gold);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <button id="btn-lang"></button>
+      <h1>磨き MIGAKI</h1>
+      <p id="header-desc"></p>
+    </header>
+
+    <main>
+      <div id="content-fr" style="display: none">
+        <div class="legal-section">
+          <h2>Mentions Légales</h2>
+
+          <h3>Éditeur du site</h3>
+          <p>
+            Le site <strong>migaki.fr</strong> est un outil personnel et
+            associatif édité par :<br />
+            <strong>Mickaël ZIZARD</strong><br />
+            Domicilié à : Mathay (25700), France.<br />
+            Contact : <a href="mailto:migosh59@gmail.com">migosh59@gmail.com</a>
+          </p>
+
+          <h3>Hébergement</h3>
+          <p>
+            Le site est hébergé par <strong>Vercel Inc.</strong><br />
+            340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis.<br />
+            Site web :
+            <a href="https://vercel.com" target="_blank">vercel.com</a>
+          </p>
+
+          <h3>Nom de domaine</h3>
+          <p>
+            Le nom de domaine est géré par <strong>OVH SAS</strong><br />
+            2 rue Kellermann - 59100 Roubaix - France.
+          </p>
+
+          <h3>Bases de données & Authentification</h3>
+          <p>
+            L'infrastructure de base de données et de gestion des comptes
+            utilisateurs est fournie par <strong>Supabase</strong>.<br />
+            Site web :
+            <a href="https://supabase.com" target="_blank">supabase.com</a>
+          </p>
+        </div>
+
+        <div class="legal-section">
+          <h2>Politique de Confidentialité (RGPD)</h2>
+
+          <p>
+            Migaki a été conçu pour être un outil respectueux de votre vie
+            privée. Les données collectées sont réduites au strict minimum
+            nécessaire pour faire fonctionner votre Dojo.
+          </p>
+
+          <h3>1. Données collectées</h3>
+          <ul>
+            <li>
+              <strong>Lors de la création d'un compte :</strong> Nous collectons
+              votre adresse email et un pseudonyme.
+            </li>
+            <li>
+              <strong>Lors de l'utilisation :</strong> Nous stockons vos
+              fichiers SGF d'entraînement et votre progression
+              (réussites/échecs) sur ces fichiers.
+            </li>
+          </ul>
+
+          <h3>2. Finalité des données</h3>
+          <p>
+            Votre email sert uniquement à sécuriser votre compte et à vous
+            permettre de réinitialiser votre mot de passe. Votre pseudonyme sert
+            à vous identifier sur l'interface. Vos données d'entraînement ne
+            sont utilisées que pour vous fournir le service d'apprentissage
+            espacé et ne font l'objet d'aucune revente ou analyse publicitaire.
+          </p>
+
+          <h3>3. Absence de traceurs et de cookies publicitaires</h3>
+          <p>
+            <strong
+              >Migaki n'utilise aucun cookie de ciblage ou de traçage
+              publicitaire (pas de Google Analytics, pas de Pixel Facebook,
+              etc.).</strong
+            ><br />
+            Par conséquent, aucune bannière de consentement préalable n'est
+            requise. Nous utilisons uniquement le stockage local de votre
+            navigateur (<code>localStorage</code>) pour mémoriser vos
+            préférences strictement techniques (thème sombre/clair, langue de
+            l'interface) et maintenir votre session active.
+          </p>
+
+          <h3>4. Vos droits</h3>
+          <p>
+            Conformément au Règlement Général sur la Protection des Données
+            (RGPD), vous disposez d'un droit d'accès, de modification et de
+            suppression de vos données personnelles.<br />
+            Vous pouvez demander la suppression définitive de votre compte et de
+            toutes les données associées (fichiers SGF personnels, statistiques)
+            en contactant l'administrateur à l'adresse fournie dans les mentions
+            légales.
+          </p>
+        </div>
+      </div>
+
+      <div id="content-en" style="display: none">
+        <div class="legal-section">
+          <h2>Legal Notice</h2>
+
+          <h3>Site Publisher</h3>
+          <p>
+            The website <strong>migaki.fr</strong> is a personal and non-profit
+            tool published by:<br />
+            <strong>Mickaël ZIZARD</strong><br />
+            Residing in: Mathay (25700), France.<br />
+            Contact: <a href="mailto:migosh59@gmail.com">migosh59@gmail.com</a>
+          </p>
+
+          <h3>Hosting</h3>
+          <p>
+            The website is hosted by <strong>Vercel Inc.</strong><br />
+            340 S Lemon Ave #4133, Walnut, CA 91789, USA.<br />
+            Website: <a href="https://vercel.com" target="_blank">vercel.com</a>
+          </p>
+
+          <h3>Domain Name</h3>
+          <p>
+            The domain name is managed by <strong>OVH SAS</strong><br />
+            2 rue Kellermann - 59100 Roubaix - France.
+          </p>
+
+          <h3>Database & Authentication</h3>
+          <p>
+            Database infrastructure and user account management are provided by
+            <strong>Supabase</strong>.<br />
+            Website:
+            <a href="https://supabase.com" target="_blank">supabase.com</a>
+          </p>
+        </div>
+
+        <div class="legal-section">
+          <h2>Privacy Policy (GDPR)</h2>
+
+          <p>
+            Migaki was designed to respect your privacy. The data collected is
+            kept to the strict minimum required to run your Dojo.
+          </p>
+
+          <h3>1. Data collected</h3>
+          <ul>
+            <li>
+              <strong>When creating an account:</strong> We collect your email
+              address and a username.
+            </li>
+            <li>
+              <strong>During use:</strong> We store your training SGF files and
+              your progress (successes/failures) on these files.
+            </li>
+          </ul>
+
+          <h3>2. Purpose of data</h3>
+          <p>
+            Your email is only used to secure your account and allow you to
+            reset your password. Your username identifies you on the interface.
+            Your training data is solely used to provide you with the spaced
+            repetition service and is never sold or used for advertising
+            analysis.
+          </p>
+
+          <h3>3. No trackers or advertising cookies</h3>
+          <p>
+            <strong
+              >Migaki does not use any targeting or advertising tracking cookies
+              (no Google Analytics, no Facebook Pixel, etc.).</strong
+            ><br />
+            Therefore, no prior consent banner is required. We only use your
+            browser's local storage (<code>localStorage</code>) to remember your
+            strictly technical preferences (dark/light theme, interface
+            language) and to keep your session active.
+          </p>
+
+          <h3>4. Your rights</h3>
+          <p>
+            In accordance with the General Data Protection Regulation (GDPR),
+            you have the right to access, modify, and delete your personal
+            data.<br />
+            You can request the permanent deletion of your account and all
+            associated data (personal SGF files, statistics) by contacting the
+            administrator at the email address provided in the legal notice.
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center">
+        <a href="./index.html" class="btn-retour" id="btn-retour"></a>
+      </div>
+    </main>
+
+    <script type="module">
+      import { initI18n, getLang, setLang } from './i18n.js';
+
+      /* Initialisation i18n */
+      await initI18n();
+      const lang = getLang();
+
+      /* Gestion du bouton de langue */
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title =
+        lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () =>
+        setLang(lang === 'fr' ? 'en' : 'fr')
+      );
+
+      /* Affichage des textes selon la langue */
+      if (lang === 'en') {
+        document.getElementById('header-desc').textContent =
+          'Legal Notice & Privacy Policy';
+        document.getElementById('content-en').style.display = 'block';
+        document.getElementById('btn-retour').textContent =
+          '← Back to the Dojo';
+      } else {
+        document.getElementById('header-desc').textContent =
+          'Mentions Légales & Politique de Confidentialité';
+        document.getElementById('content-fr').style.display = 'block';
+        document.getElementById('btn-retour').textContent = '← Retour au Dojo';
+      }
+    </script>
+  </body>
+</html>

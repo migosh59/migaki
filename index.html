@@ -1362,6 +1362,26 @@
         pointer-events: none; /* Empêche le clic et le survol */
         filter: grayscale(100%);
       }
+
+      /* Lien Mentions Légales */
+      .footer-legales {
+        margin-top: 10px;
+        padding: 14px 0 8px;
+        text-align: center;
+      }
+      .footer-legales a {
+        font-family: 'Cinzel', serif;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: all 0.25s;
+      }
+      .footer-legales a:hover {
+        color: var(--gold-bright);
+        text-shadow: 0 0 12px rgba(212, 160, 23, 0.4);
+      }
     </style>
 
     <script type="text/javascript" src="wgo.min.js"></script>
@@ -1591,6 +1611,11 @@
         </div>
 
         <div id="commentaire-sgf"></div>
+        <div class="footer-legales">
+          <a href="./legales.html" id="lien-legales"
+            >Mentions Légales & Confidentialité</a
+          >
+        </div>
       </div>
     </div>
 
@@ -1666,6 +1691,8 @@
         '✕ ' + t('btn_quitter_presentation');
       document.getElementById('btn-son').title = t('son_titre');
       document.getElementById('btn-admin').textContent = t('header_admin');
+      document.getElementById('lien-legales').textContent =
+        t('mentions_legales');
 
       // ── Bouton langue ──
       const btnLang = document.getElementById('btn-lang');
