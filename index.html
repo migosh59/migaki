@@ -24,6 +24,8 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://migaki.fr/" />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#0c0b08" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
@@ -1428,8 +1430,14 @@
         <div class="subtitle" id="header-subtitle"></div>
       </div>
       <button id="btn-logout"></button>
-      <button id="btn-lang"></button>
-      <button id="btn-theme" title="Changer de thème">☀️</button>
+      <button id="btn-lang" aria-label="Changer de langue"></button>
+      <button
+        id="btn-theme"
+        title="Changer de thème"
+        aria-label="Changer de thème"
+      >
+        ☀️
+      </button>
       <button
         id="btn-admin"
         style="

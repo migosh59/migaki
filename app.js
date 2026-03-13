@@ -343,6 +343,7 @@ function afficherTableau() {
     const btnVisu = document.createElement('button');
     btnVisu.innerText = '👁';
     btnVisu.title = window.t ? window.t('btn_visualiser_title') : 'Visualiser';
+    btnVisu.setAttribute('aria-label', btnVisu.title);
     btnVisu.className = 'btn-visu';
     btnVisu.addEventListener('click', () => visualiserVariation(variation));
     tdVisu.appendChild(btnVisu);
