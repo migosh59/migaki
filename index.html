@@ -599,23 +599,34 @@
 
       #commentaire-sgf {
         display: none;
-        background: var(--surface-1);
+        position: absolute;
+        bottom: 24px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 85%;
+        max-width: 480px; /* Un peu plus large pour accueillir le gros texte */
+        background: rgba(24, 21, 15, 0.92);
+        backdrop-filter: blur(4px);
         border: 1px solid var(--border);
         border-left: 3px solid var(--gold);
         border-radius: var(--radius);
-        padding: 12px 16px;
+        padding: 16px 22px; /* Un peu plus d'air à l'intérieur */
         font-style: italic;
-        color: var(--text-secondary);
-        font-size: 15px;
-        line-height: 1.6;
-        box-shadow: var(--shadow);
-        animation: fadeSlide 0.35s ease;
+        color: var(--text-primary);
+        font-size: 19px; /* Taille XL ! */
+        line-height: 1.6; /* On écarte un peu les lignes pour la lisibilité */
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+        z-index: 20;
+        animation: fadeSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
       }
 
-      @keyframes fadeSlide {
+      /* On ajoute une animation d'apparition douce depuis le bas */
+      @keyframes fadeSlideUp {
         from {
           opacity: 0;
-          transform: translateY(4px);
+          transform: translateY(8px);
         }
         to {
           opacity: 1;
@@ -1522,6 +1533,8 @@
         <div id="goban-wrapper" style="display: none">
           <div id="toast-container"></div>
           <div id="goban"></div>
+
+          <div id="commentaire-sgf"></div>
         </div>
 
         <div id="message-fin">
@@ -1633,7 +1646,6 @@
           </div>
         </div>
 
-        <div id="commentaire-sgf"></div>
         <div class="footer-legales">
           <a href="./aide.html" id="lien-aide">Guide du Dojo</a>
           <span style="color: var(--text-muted); opacity: 0.5; margin: 0 8px"

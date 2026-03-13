@@ -487,9 +487,10 @@ function relancerSequence() {
   reinitialiserMoteur();
   if (kifu.root.setup)
     for (const s of kifu.root.setup) placerPierreSetup(s.x, s.y, s.c);
-  afficherCommentaire(kifu.root);
+
   noeudCourant = kifu.root;
   modeExerciceActif = true;
+  afficherCommentaire(kifu.root);
   compteurErreurs = 0;
   abandonSequence = false;
   mettreAJourVies();
