@@ -338,6 +338,7 @@ function afficherTableau() {
       sauvegarderDonnees();
       if (infoNom.getAttribute('data-sig') === sig)
         infoNom.innerText = this.value;
+      sauvegarderVariationServeur(sig);
     });
     tdNom.appendChild(inputNom);
     tr.appendChild(tdNom);
