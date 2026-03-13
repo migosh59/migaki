@@ -143,6 +143,7 @@ let donneesSauvegardees = {};
 let timerPresentation = null;
 let indexVariationActuelle = 0;
 let indexCoupActuel = 0;
+let timerOrdi = null;
 
 /* =============================================
    MOTEUR DE JEU + MARQUEUR CR
@@ -387,6 +388,10 @@ function arreterTout() {
     clearTimeout(timerPresentation);
     timerPresentation = null;
   }
+  if (timerOrdi) {
+    clearTimeout(timerOrdi);
+    timerOrdi = null;
+  }
   modePresentationActif = false;
   modeExerciceActif = false;
   goban.removeAllObjects();
@@ -535,8 +540,13 @@ function verifierTourOrdi() {
       delai = 1500;
     }
 
-    /* L'ordinateur patiente avant de jouer son coup */
-    setTimeout(jouerCoupOrdi, delai);
+    /* --- CORRECTION DU FANTÔME --- */
+    /* On nettoie un éventuel timer précédent pour être sûr */
+    if (timerOrdi) clearTimeout(timerOrdi);
+
+    /* L'ordinateur patiente avant de jouer son coup, et on mémorise le timer */
+    timerOrdi = setTimeout(jouerCoupOrdi, delai);
+    /* ----------------------------- */
   }
 }
 
