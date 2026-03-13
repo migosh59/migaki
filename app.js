@@ -500,9 +500,20 @@ function relancerSequence() {
 function verifierTourOrdi() {
   if (!modeExerciceActif || !noeudCourant || noeudCourant.children.length === 0)
     return;
+
   if (noeudCourant.children[0].move.c === couleurOrdi) {
     gobanWrapper.classList.add('ordi-pense');
-    setTimeout(jouerCoupOrdi, 500);
+
+    /* Délai de base (500ms) quand il n'y a rien à lire */
+    let delai = 500;
+
+    /* Si le coup qu'on vient de jouer contient un commentaire, on fait une pause fixe de 1.5 secondes */
+    if (noeudCourant.comment && noeudCourant.comment.trim() !== '') {
+      delai = 1500;
+    }
+
+    /* L'ordinateur patiente avant de jouer son coup */
+    setTimeout(jouerCoupOrdi, delai);
   }
 }
 
