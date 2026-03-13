@@ -655,6 +655,24 @@ goban.addEventListener('click', function (x, y) {
   if (coupValide) {
     jouerCoupAvecCaptures(x, y, couleurJoueur);
     noeudCourant = coupValide;
+
+    /* --- CORRECTION DU BUG DE BIFURCATION --- */
+    /* Si le coup joué ne fait pas partie de la variation prévue, 
+       on met à jour la variation courante pour suivre le choix du joueur ! */
+    if (!variationCourante || !variationCourante.includes(noeudCourant)) {
+      const variationsPossibles = toutesLesVariations.filter((v) =>
+        v.includes(noeudCourant)
+      );
+      if (variationsPossibles.length > 0) {
+        // On recible l'exercice sur l'une des variations qui passe par ce nouveau chemin
+        variationCourante =
+          variationsPossibles[
+            Math.floor(Math.random() * variationsPossibles.length)
+          ];
+      }
+    }
+    /* ---------------------------------------- */
+
     afficherCommentaire(noeudCourant);
     if (noeudCourant.children.length > 0) verifierTourOrdi();
     else terminerVariation();
