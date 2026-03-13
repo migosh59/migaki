@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>磨き Migaki — Créer ses SGF</title>
+    <script>
+      (function () {
+        const theme = localStorage.getItem('migaki_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #d4a017;
+        --gold-bright: #f0c040;
+        --radius: 6px;
+      }
+
+      [data-theme='dark'] {
+        --bg: #0c0b08;
+        --surface-1: #18150f;
+        --surface-2: #22201a;
+        --surface-3: #2c2920;
+        --text-primary: #e8dfc8;
+        --text-secondary: #a09070;
+        --text-muted: #5a5040;
+        --border: rgba(212, 160, 23, 0.14);
+        --border-strong: rgba(212, 160, 23, 0.3);
+        --panel-bg: rgba(212, 160, 23, 0.04);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        --bg-grad-1: rgba(139, 105, 20, 0.05);
+        --bg-grad-2: rgba(92, 68, 9, 0.03);
+      }
+
+      [data-theme='light'] {
+        --bg: #f0ebe0;
+        --surface-1: #faf6ee;
+        --surface-2: #fff8ed;
+        --surface-3: #ede4d0;
+        --text-primary: #2a220e;
+        --text-secondary: #6b5530;
+        --text-muted: #9e8660;
+        --border: rgba(139, 105, 20, 0.18);
+        --border-strong: rgba(139, 105, 20, 0.38);
+        --panel-bg: rgba(212, 160, 23, 0.06);
+        --shadow: 0 4px 20px rgba(100, 70, 10, 0.12);
+        --bg-grad-1: rgba(139, 105, 20, 0.07);
+        --bg-grad-2: rgba(92, 68, 9, 0.05);
+      }
+
+      body {
+        font-family: 'Crimson Pro', Georgia, serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        transition:
+          background 0.35s,
+          color 0.35s;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 15% 40%,
+            var(--bg-grad-1) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 85% 15%,
+            var(--bg-grad-2) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      header {
+        text-align: center;
+        padding: 40px 20px;
+        border-bottom: 1px solid var(--border-strong);
+        background: var(--panel-bg);
+        position: relative;
+        z-index: 1;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+
+      header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 32px;
+        letter-spacing: 0.15em;
+        color: var(--gold-bright);
+        margin: 0 0 8px 0;
+      }
+
+      header p {
+        font-style: italic;
+        color: var(--text-muted);
+        letter-spacing: 0.1em;
+        margin: 0;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .guide-section {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px;
+        margin-bottom: 32px;
+        box-shadow: var(--shadow);
+      }
+
+      h2 {
+        font-family: 'Cinzel', serif;
+        font-size: 18px;
+        letter-spacing: 0.1em;
+        color: var(--gold);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      h3 {
+        font-family: 'Cinzel', serif;
+        font-size: 16px;
+        color: var(--gold-bright);
+        margin-top: 24px;
+        margin-bottom: 4px;
+        letter-spacing: 0.05em;
+      }
+
+      p {
+        color: var(--text-primary);
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+
+      ul {
+        padding-left: 0;
+        list-style: none;
+      }
+
+      li {
+        margin-bottom: 16px;
+        background: var(--surface-2);
+        padding: 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+      }
+
+      li strong {
+        display: block;
+        font-family: 'Cinzel', serif;
+        font-size: 16px;
+        margin-bottom: 6px;
+        letter-spacing: 0.05em;
+      }
+
+      li strong a {
+        color: var(--gold-bright);
+        text-decoration: none;
+        transition:
+          opacity 0.2s,
+          text-shadow 0.2s;
+      }
+
+      li strong a:hover {
+        opacity: 0.9;
+        text-decoration: underline;
+        text-shadow: 0 0 8px rgba(212, 160, 23, 0.4);
+      }
+
+      a {
+        color: var(--gold-bright);
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+
+      a:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+      }
+
+      .btn-retour {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 24px;
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        color: var(--text-secondary);
+        font-family: 'Cinzel', serif;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        transition: all 0.22s;
+        margin-bottom: 40px;
+      }
+
+      .btn-retour:hover {
+        border-color: var(--gold);
+        color: var(--gold-bright);
+        background: var(--surface-1);
+      }
+
+      #btn-theme {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.22s;
+        color: var(--text-secondary);
+        line-height: 1;
+      }
+      #btn-theme:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+      }
+
+      #btn-lang {
+        position: absolute;
+        right: 76px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+        padding: 6px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.22s;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      #btn-lang:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+      }
+
+      .contact-box {
+        text-align: center;
+        padding: 24px;
+        background: rgba(212, 160, 23, 0.05);
+        border: 1px dashed var(--gold);
+        border-radius: var(--radius);
+        margin-top: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <button id="btn-lang"></button>
+      <button id="btn-theme" title="Changer de thème">☀️</button>
+      <h1>磨き MIGAKI</h1>
+      <p id="header-desc"></p>
+    </header>
+
+    <main>
+      <div id="content-fr" style="display: none">
+        <div class="guide-section">
+          <h2>Pourquoi créer ses propres fichiers ?</h2>
+          <p>
+            Migaki est avant tout un outil d'entraînement personnel. Le projet
+            ne dispose pas de professeur ou de pédagogue attitré pour fournir
+            une bibliothèque officielle de séquences (à l'exception de quelques
+            exemples pour débuter).
+          </p>
+          <p>
+            C'est à vous de forger vos propres armes ! Pour vous aider à
+            compiler vos ouvertures (Fuseki) et séquences locales (Joseki),
+            voici une liste de ressources et de créateurs de contenu
+            recommandés.
+          </p>
+        </div>
+
+        <div class="guide-section">
+          <h2>Plateformes d'apprentissage</h2>
+          <ul>
+            <li>
+              <strong
+                ><a
+                  href="https://awesomebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Awesome Baduk</a
+                ></strong
+              >
+              Plateforme très complète avec de nombreux cours vidéo et des
+              exercices interactifs, idéale pour structurer son apprentissage.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://explorebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Explore Baduk</a
+                ></strong
+              >
+              Des cours modernes et clairs pour comprendre les concepts
+              fondamentaux du Go, par des joueurs passionnés.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://gomagic.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Go Magic</a
+                ></strong
+              >
+              Une excellente plateforme avec des vidéos de haute qualité et des
+              parcours d'apprentissage interactifs du niveau débutant jusqu'au
+              niveau Dan.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://app.heijiajia.com.tw/#/en-US/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >HJJ Go</a
+                ></strong
+              >
+              Des revues de parties et des analyses poussées proposées par un
+              professionnel coréen.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.josekipedia.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Josekipedia</a
+                ></strong
+              >
+              Le dictionnaire collaboratif incontournable pour rechercher
+              n'importe quel Joseki et ses réfutations. Indispensable pour créer
+              vos fichiers SGF.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://polgote.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Polgote</a
+                ></strong
+              >
+              Une plateforme regroupant des professeurs professionnels proposant
+              des cours, des revues et du contenu de haut niveau.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://senseis.xmp.net/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Sensei's Library</a
+                ></strong
+              >
+              Le wiki historique et mondial du jeu de Go. Une mine d'or absolue
+              pour décortiquer la théorie des ouvertures.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://shawnsgogroup.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >shawnsgogroup</a
+                ></strong
+              >
+              Groupe d'étude et de cours proposant des analyses régulières pour
+              progresser ensemble.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.simplebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Simple Baduk</a
+                ></strong
+              >
+              Des cours et des explications limpides, souvent focalisés sur des
+              concepts précis pour aider les joueurs à passer les paliers
+              difficiles.
+            </li>
+          </ul>
+        </div>
+
+        <div class="guide-section">
+          <h2>Chaînes YouTube recommandées</h2>
+          <ul>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@BadukDoctor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Baduk Doctor</a
+                ></strong
+              >
+              Un joueur fort qui explique ses coups en direct avec beaucoup de
+              pédagogie, idéal pour comprendre la direction de jeu.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@dwyrin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Dwyrin</a
+                ></strong
+              >
+              Célèbre pour sa série "Back to Basics", il enseigne comment gagner
+              des parties en jouant des coups simples et solides plutôt qu'en
+              cherchant la bagarre compliquée.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@FulguroGo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Fulgurogo</a
+                ></strong
+              >
+              L'une des meilleures chaînes francophones ! Des revues, des
+              analyses de Joseki et une vulgarisation excellente pour tous les
+              niveaux.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@mdzgo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >MDZ Go</a
+                ></strong
+              >
+              Une chaîne très riche en contenu francophone, parfaite pour
+              découvrir des séquences de Fuseki et des astuces pratiques.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@MichaelRedmondsGoTV"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Michael Redmond's go tv</a
+                ></strong
+              >
+              L'un des rares professionnels occidentaux (9ème Dan). Ses analyses
+              sont profondes et particulièrement instructives sur les ouvertures
+              modernes influencées par l'IA.
+            </li>
+          </ul>
+
+          <div class="contact-box">
+            <h3 style="margin-top: 0">Une suggestion ?</h3>
+            <p style="margin-bottom: 0">
+              Vous connaissez un site ou une chaîne qui mérite d'être dans cette
+              liste ?<br />
+              Faites-le nous savoir :
+              <a href="mailto:contact@migaki.fr">contact@migaki.fr</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="content-en" style="display: none">
+        <div class="guide-section">
+          <h2>Why create your own files?</h2>
+          <p>
+            Migaki is primarily a personal training tool. The project does not
+            have a dedicated teacher or pedagogue to provide an official library
+            of sequences (apart from a few beginner examples).
+          </p>
+          <p>
+            It is up to you to forge your own weapons! To help you compile your
+            openings (Fuseki) and local sequences (Joseki), here is a list of
+            recommended resources and content creators.
+          </p>
+        </div>
+
+        <div class="guide-section">
+          <h2>Learning Platforms</h2>
+          <ul>
+            <li>
+              <strong
+                ><a
+                  href="https://awesomebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Awesome Baduk</a
+                ></strong
+              >
+              A comprehensive platform with numerous video courses and
+              interactive exercises, ideal for structuring your learning.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://explorebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Explore Baduk</a
+                ></strong
+              >
+              Modern and clear courses to understand the fundamental concepts of
+              Go, created by passionate players.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://gomagic.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Go Magic</a
+                ></strong
+              >
+              An excellent platform with high-quality videos and interactive
+              learning paths from beginner to Dan level.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@HJJGo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >HJJ Go (HeoJangJin)</a
+                ></strong
+              >
+              Game reviews and deep analyses provided by a Korean professional.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.josekipedia.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Josekipedia</a
+                ></strong
+              >
+              The ultimate collaborative dictionary to look up any Joseki and
+              its refutations. Essential for creating your SGF files.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://polgote.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Polgote</a
+                ></strong
+              >
+              A platform gathering professional teachers offering courses,
+              reviews, and high-level content.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://senseis.xmp.net/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Sensei's Library</a
+                ></strong
+              >
+              The historic global wiki for the game of Go. An absolute goldmine
+              for breaking down opening theory.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://shawnsgogroup.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >shawnsgogroup</a
+                ></strong
+              >
+              A study group and course platform offering regular analyses to
+              improve together.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.simplebaduk.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Simple Baduk</a
+                ></strong
+              >
+              Clear courses and explanations, often focused on specific concepts
+              to help players overcome difficult hurdles.
+            </li>
+          </ul>
+        </div>
+
+        <div class="guide-section">
+          <h2>Recommended YouTube Channels</h2>
+          <ul>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@BadukDoctor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Baduk Doctor</a
+                ></strong
+              >
+              A strong player who explains his moves live with great pedagogy,
+              ideal for understanding the direction of play.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@dwyrin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Dwyrin</a
+                ></strong
+              >
+              Famous for his "Back to Basics" series, teaching how to win games
+              by playing simple, solid moves rather than looking for complicated
+              fights.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@FulguroGo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Fulgurogo</a
+                ></strong
+              >
+              Great channel for reviews, Joseki analyses, and excellent
+              popularization for all levels.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@mdzgo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >MDZ Go</a
+                ></strong
+              >
+              A channel very rich in content, perfect for discovering Fuseki
+              sequences and practical tips.
+            </li>
+            <li>
+              <strong
+                ><a
+                  href="https://www.youtube.com/@MichaelRedmondsGoTV"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Michael Redmond's go tv</a
+                ></strong
+              >
+              One of the few Western professionals (9th Dan). His analyses are
+              deep and particularly instructive on modern AI-influenced
+              openings.
+            </li>
+          </ul>
+
+          <div class="contact-box">
+            <h3 style="margin-top: 0">Have a suggestion?</h3>
+            <p style="margin-bottom: 0">
+              Do you know a website or channel that deserves to be on this
+              list?<br />
+              Let us know:
+              <a href="mailto:contact@migaki.fr">contact@migaki.fr</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center">
+        <a href="./index.html" class="btn-retour" id="btn-retour"></a>
+      </div>
+    </main>
+
+    <script type="module">
+      import { initI18n, getLang, setLang } from './i18n.js';
+
+      /* Initialisation i18n */
+      await initI18n();
+      const lang = getLang();
+
+      /* Gestion du bouton de langue */
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
+      btnLang.title =
+        lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () =>
+        setLang(lang === 'fr' ? 'en' : 'fr')
+      );
+
+      /* Affichage des textes selon la langue */
+      if (lang === 'en') {
+        document.getElementById('header-desc').textContent =
+          'Where to find sequences';
+        document.getElementById('content-en').style.display = 'block';
+        document.getElementById('btn-retour').textContent =
+          '← Back to the Dojo';
+      } else {
+        document.getElementById('header-desc').textContent =
+          'Où trouver des séquences';
+        document.getElementById('content-fr').style.display = 'block';
+        document.getElementById('btn-retour').textContent = '← Retour au Dojo';
+      }
+      /* Gestion du bouton de thème */
+      const btnTheme = document.getElementById('btn-theme');
+      const currentTheme =
+        document.documentElement.getAttribute('data-theme') || 'dark';
+      btnTheme.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+      btnTheme.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const next = theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('migaki_theme', next);
+        btnTheme.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
+    </script>
+  </body>
+</html>

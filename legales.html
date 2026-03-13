@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>磨き Migaki — Legal</title>
+    <script>
+      (function () {
+        const theme = localStorage.getItem('migaki_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap"
@@ -13,24 +19,52 @@
       :root {
         --gold: #d4a017;
         --gold-bright: #f0c040;
+        --radius: 6px;
+      }
+
+      [data-theme='dark'] {
+        --bg: #0c0b08;
         --surface-1: #18150f;
         --surface-2: #22201a;
+        --surface-3: #2c2920;
         --text-primary: #e8dfc8;
         --text-secondary: #a09070;
         --text-muted: #5a5040;
         --border: rgba(212, 160, 23, 0.14);
         --border-strong: rgba(212, 160, 23, 0.3);
-        --radius: 6px;
+        --panel-bg: rgba(212, 160, 23, 0.04);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        --bg-grad-1: rgba(139, 105, 20, 0.05);
+        --bg-grad-2: rgba(92, 68, 9, 0.03);
+      }
+
+      [data-theme='light'] {
+        --bg: #f0ebe0;
+        --surface-1: #faf6ee;
+        --surface-2: #fff8ed;
+        --surface-3: #ede4d0;
+        --text-primary: #2a220e;
+        --text-secondary: #6b5530;
+        --text-muted: #9e8660;
+        --border: rgba(139, 105, 20, 0.18);
+        --border-strong: rgba(139, 105, 20, 0.38);
+        --panel-bg: rgba(212, 160, 23, 0.06);
+        --shadow: 0 4px 20px rgba(100, 70, 10, 0.12);
+        --bg-grad-1: rgba(139, 105, 20, 0.07);
+        --bg-grad-2: rgba(92, 68, 9, 0.05);
       }
 
       body {
         font-family: 'Crimson Pro', Georgia, serif;
-        background: #0c0b08;
+        background: var(--bg);
         color: var(--text-primary);
         min-height: 100vh;
         margin: 0;
         padding: 0;
         line-height: 1.6;
+        transition:
+          background 0.35s,
+          color 0.35s;
       }
 
       body::before {
@@ -40,12 +74,12 @@
         background:
           radial-gradient(
             ellipse at 15% 40%,
-            rgba(139, 105, 20, 0.05) 0%,
+            var(--bg-grad-1) 0%,
             transparent 55%
           ),
           radial-gradient(
             ellipse at 85% 15%,
-            rgba(92, 68, 9, 0.03) 0%,
+            var(--bg-grad-2) 0%,
             transparent 50%
           );
         pointer-events: none;
@@ -56,9 +90,12 @@
         text-align: center;
         padding: 40px 20px;
         border-bottom: 1px solid var(--border-strong);
-        background: rgba(212, 160, 23, 0.04);
+        background: var(--panel-bg);
         position: relative;
         z-index: 1;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
       }
 
       header h1 {
@@ -90,7 +127,7 @@
         border-radius: var(--radius);
         padding: 32px;
         margin-bottom: 32px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow);
       }
 
       h2 {
@@ -162,29 +199,51 @@
         background: var(--surface-1);
       }
 
-      /* Bouton de langue identique aux autres pages */
+      #btn-theme {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.22s;
+        color: var(--text-secondary);
+        line-height: 1;
+      }
+      #btn-theme:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+      }
+
       #btn-lang {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        background: rgba(212, 160, 23, 0.08);
-        border: 1px solid rgba(212, 160, 23, 0.2);
+        right: 76px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
         border-radius: 20px;
-        padding: 4px 10px;
+        padding: 6px 10px;
         font-size: 15px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.22s;
+        color: var(--text-primary);
         line-height: 1;
       }
       #btn-lang:hover {
-        background: rgba(212, 160, 23, 0.18);
         border-color: var(--gold);
+        background: var(--surface-3);
       }
     </style>
   </head>
   <body>
     <header>
       <button id="btn-lang"></button>
+      <button id="btn-theme" title="Changer de thème">☀️</button>
       <h1>磨き MIGAKI</h1>
       <p id="header-desc"></p>
     </header>
@@ -409,6 +468,20 @@
         document.getElementById('content-fr').style.display = 'block';
         document.getElementById('btn-retour').textContent = '← Retour au Dojo';
       }
+
+      /* Gestion du bouton de thème */
+      const btnTheme = document.getElementById('btn-theme');
+      const currentTheme =
+        document.documentElement.getAttribute('data-theme') || 'dark';
+      btnTheme.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+      btnTheme.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const next = theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('migaki_theme', next);
+        btnTheme.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
     </script>
   </body>
 </html>
