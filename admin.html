@@ -116,7 +116,7 @@
       }
 
       main {
-        max-width: 960px;
+        max-width: 1400px;
         margin: 0 auto;
         padding: 32px 24px;
         display: flex;
@@ -334,6 +334,24 @@
         background: rgba(140, 48, 48, 0.95);
         color: #ffb8b8;
         border: 1px solid rgba(200, 80, 80, 0.4);
+      }
+
+      input.admin-note-edit {
+        width: 100%;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid transparent;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-family: 'Crimson Pro', serif;
+        font-size: 15px;
+        transition: all 0.2s;
+      }
+
+      input.admin-note-edit:focus {
+        outline: none;
+        background: var(--input-focus);
+        border-color: var(--border-strong);
       }
     </style>
   </head>
@@ -572,15 +590,28 @@
           return;
         }
 
+        /* Initialisation du "carnet d'adresses" local pour les notes */
+        const cleStockage = 'migaki_admin_notes';
+        let notesAdmin = {};
+        try {
+          notesAdmin = JSON.parse(localStorage.getItem(cleStockage)) || {};
+        } catch (e) {
+          /* En cas de problème de lecture, on repart à zéro */
+        }
+
         const table = document.createElement('table');
         table.className = 'data-table';
+
+        /* Ajout des colonnes Pseudo et Note dans l'en-tête */
         table.innerHTML = `
     <thead>
         <tr>
             <th>${t('admin_users_email')}</th>
+            <th>Pseudo</th>
             <th>${t('admin_users_inscription')}</th>
             <th style="text-align:center">${t('admin_users_sgf')}</th>
             <th style="text-align:center">${t('admin_users_sequences')}</th>
+            <th>Note</th>
             <th style="text-align:right">${t('admin_table_actions')}</th>
         </tr>
     </thead>
@@ -593,17 +624,25 @@
           const date = new Date(user.created_at).toLocaleDateString(
             lang === 'fr' ? 'fr-FR' : 'en-US'
           );
+
+          /* Extraction sécurisée du pseudo depuis les métadonnées de Supabase */
+          const meta = user.raw_user_meta_data || user.user_metadata || {};
+          const pseudo = meta.pseudo || '—';
+
+          /* On prépare la ligne avec des balises TD pour recevoir l'input de la Note */
           tr.innerHTML = `
     <td>
         <span class="text-primary">${user.email}</span>
         ${user.variation_count > 0 ? `<span class="badge badge-active" style="margin-left:8px;">${t('admin_users_actif')}</span>` : ''}
         ${user.is_club ? `<span class="badge" style="background: rgba(212, 160, 23, 0.2); color: var(--gold); border: 1px solid rgba(212, 160, 23, 0.4); margin-left:8px;">🛡️ Club</span>` : ''}
     </td>
+    <td><span class="text-primary">${pseudo}</span></td>
     <td><span class="text-muted">${date}</span></td>
     <td style="text-align:center"><span class="badge">${user.sgf_count}</span></td>
     <td style="text-align:center">
         <span class="${user.variation_count > 0 ? 'text-primary' : 'text-muted'}">${user.variation_count}</span>
     </td>
+    <td class="td-note"></td>
     <td>
         <div class="table-actions">
             <button class="btn btn-role" data-id="${user.id}" data-club="${user.is_club ? 'true' : 'false'}">
@@ -616,6 +655,29 @@
         </div>
     </td>
 `;
+
+          /* Création et injection de l'input pour la Note */
+          const inputNote = document.createElement('input');
+          inputNote.type = 'text';
+          inputNote.className = 'admin-note-edit';
+          inputNote.placeholder = 'Ajouter une note...';
+          inputNote.value = notesAdmin[user.id] || '';
+
+          /* Sauvegarde de la note dans le navigateur */
+          inputNote.addEventListener('change', function () {
+            notesAdmin[user.id] = this.value;
+            localStorage.setItem(cleStockage, JSON.stringify(notesAdmin));
+            this.style.background = 'rgba(74, 140, 63, 0.15)';
+            setTimeout(() => {
+              this.style.background = 'transparent';
+            }, 800);
+          });
+
+          inputNote.addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') this.blur();
+          });
+
+          tr.querySelector('.td-note').appendChild(inputNote);
           tbody.appendChild(tr);
         }
 
