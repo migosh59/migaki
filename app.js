@@ -364,6 +364,21 @@ function afficherTableau() {
 
     const tdVisu = document.createElement('td');
     tdVisu.className = 'td-visu';
+    tdVisu.style.whiteSpace =
+      'nowrap'; /* Empêche les deux boutons de s'empiler */
+
+    /* 1. Le nouveau bouton Play (Entraînement forcé) */
+    const btnPlay = document.createElement('button');
+    btnPlay.innerText = '▶';
+    btnPlay.title = "S'entraîner sur cette séquence";
+    btnPlay.className = 'btn-visu'; /* On recycle ton style CSS existant ! */
+    btnPlay.style.marginRight = '6px';
+    btnPlay.addEventListener('click', () =>
+      forcerEntrainementVariation(variation)
+    );
+    tdVisu.appendChild(btnPlay);
+
+    /* 2. Le bouton Visu existant (Oeil) */
     const btnVisu = document.createElement('button');
     btnVisu.innerText = '👁';
     btnVisu.title = window.t ? window.t('btn_visualiser_title') : 'Visualiser';
@@ -371,6 +386,7 @@ function afficherTableau() {
     btnVisu.className = 'btn-visu';
     btnVisu.addEventListener('click', () => visualiserVariation(variation));
     tdVisu.appendChild(btnVisu);
+
     tr.appendChild(tdVisu);
 
     tbody.appendChild(tr);
@@ -522,7 +538,7 @@ function lancerExercice() {
   relancerSequence();
 }
 
-function relancerSequence() {
+function relancerSequence(variationForcee = null) {
   goban.removeAllObjects();
   messageFin.style.display = 'none';
   messageFin.className = '';
@@ -530,7 +546,7 @@ function relancerSequence() {
   infoVariation.style.display = 'block';
   commentaireSgf.style.display = 'none';
   gobanWrapper.classList.remove('ordi-pense');
-  // On utilise window.t() pour aller chercher la traduction
+
   infoNom.innerText = window.t
     ? window.t('sequence_en_cours')
     : 'Séquence en cours...';
@@ -538,7 +554,17 @@ function relancerSequence() {
     ? window.t('joue_pour_decouvrir')
     : 'Joue pour découvrir la suite !';
   infoNom.setAttribute('data-sig', '');
-  variationCourante = choisirVariation();
+
+  /* --- L'ASTUCE EST ICI --- */
+  /* Si la variable est un tableau (notre séquence), on l'utilise.
+     Sinon (si c'est vide ou un événement de clic aléatoire), on pioche ! */
+  if (Array.isArray(variationForcee)) {
+    variationCourante = variationForcee;
+  } else {
+    variationCourante = choisirVariation();
+  }
+  /* ------------------------ */
+
   reinitialiserMoteur();
   if (kifu.root.setup)
     for (const s of kifu.root.setup) placerPierreSetup(s.x, s.y, s.c);
@@ -551,6 +577,14 @@ function relancerSequence() {
   mettreAJourVies();
   afficherTableau();
   verifierTourOrdi();
+}
+
+/* Nouvelle fonction appelée par notre futur bouton Play */
+function forcerEntrainementVariation(variation) {
+  arreterTout();
+  document.body.classList.remove('mode-presentation');
+  redimensionnerGoban(calculerTailleGoban());
+  relancerSequence(variation);
 }
 
 function verifierTourOrdi() {
