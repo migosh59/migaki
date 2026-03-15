@@ -733,6 +733,11 @@ goban.addEventListener('click', function (x, y) {
   )
     return;
 
+  /* Si la case est déjà occupée par une pierre (état différent de 0), on ignore le clic ! */
+  if (moteurJeu && moteurJeu.position.get(x, y) !== 0) {
+    return;
+  }
+
   const coupValide = noeudCourant.children.find(
     (e) =>
       e.move && e.move.x === x && e.move.y === y && e.move.c === couleurJoueur
