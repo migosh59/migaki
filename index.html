@@ -986,6 +986,23 @@
         transform: translateY(-1px);
       }
 
+      #btn-mode-exploration {
+        border-color: rgba(44, 96, 128, 0.42);
+        background: rgba(44, 96, 128, 0.07);
+        color: #70a8cc;
+      }
+      #btn-mode-exploration:hover {
+        background: rgba(44, 96, 128, 0.2);
+        border-color: var(--info);
+        transform: translateY(-1px);
+      }
+
+      #btn-exploration-retour:hover {
+        background: var(--surface-3) !important;
+        border-color: var(--gold) !important;
+        color: var(--gold-bright) !important;
+      }
+
       #bloc-statistiques {
         padding: 14px;
       }
@@ -1451,128 +1468,247 @@
         border-color: var(--gold);
         background: var(--surface-3);
       }
-      
+
       /* On décale le bouton Quitter pour faire de la place */
-      #btn-logout { right: 190px; } 
+      #btn-logout {
+        right: 190px;
+      }
 
       .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(5px); z-index: 2000;
-        display: flex; align-items: center; justify-content: center;
-        opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
       }
       .modal-overlay.open {
-        opacity: 1; pointer-events: auto;
+        opacity: 1;
+        pointer-events: auto;
       }
 
       .modal-content {
-        background: var(--surface-1); border: 1px solid var(--border-strong);
-        border-radius: var(--radius); width: 95%; max-width: 1000px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.8); position: relative;
+        background: var(--surface-1);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        width: 95%;
+        max-width: 1000px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        position: relative;
         overflow: hidden;
       }
 
       .modal-close {
-        position: absolute; top: 16px; right: 20px;
-        background: none; border: none; color: var(--text-muted);
-        font-size: 20px; cursor: pointer; transition: color 0.2s;
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 20px;
+        cursor: pointer;
+        transition: color 0.2s;
         z-index: 10;
       }
-      .modal-close:hover { color: var(--danger); }
+      .modal-close:hover {
+        color: var(--danger);
+      }
 
       .profil-layout {
-        display: grid; grid-template-columns: 2fr 1fr;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
         min-height: 500px;
       }
 
       /* --- Section Gauche (Calendrier) --- */
       .profil-calendar-section {
-        padding: 30px; border-right: 1px solid var(--border);
+        padding: 30px;
+        border-right: 1px solid var(--border);
         background: var(--panel-bg);
       }
-      
+
       .calendar-header {
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 20px;
       }
       .calendar-header h2 {
-        font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold-bright);
-        margin: 0; text-transform: uppercase; letter-spacing: 0.1em;
+        font-family: 'Cinzel', serif;
+        font-size: 22px;
+        color: var(--gold-bright);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
       }
       .btn-cal-nav {
-        background: var(--surface-3); border: 1px solid var(--border-strong);
-        color: var(--text-primary); padding: 6px 12px; border-radius: 4px;
-        cursor: pointer; transition: all 0.2s;
+        background: var(--surface-3);
+        border: 1px solid var(--border-strong);
+        color: var(--text-primary);
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
       }
-      .btn-cal-nav:hover { background: var(--surface-4); border-color: var(--gold); }
+      .btn-cal-nav:hover {
+        background: var(--surface-4);
+        border-color: var(--gold);
+      }
 
       .calendar-days-header {
-        display: grid; grid-template-columns: repeat(7, 1fr);
-        text-align: center; font-family: 'Cinzel', serif; font-size: 12px;
-        color: var(--text-muted); margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-family: 'Cinzel', serif;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
       }
 
       .calendar-grid {
-        display: grid; grid-template-columns: repeat(7, 1fr);
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
         gap: 6px;
       }
 
       .cal-day {
-        aspect-ratio: 1; background: var(--surface-2); border: 1px solid var(--border);
-        border-radius: 6px; padding: 6px; display: flex; flex-direction: column;
-        cursor: pointer; transition: all 0.2s; position: relative;
+        aspect-ratio: 1;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
       }
-      .cal-day:hover { border-color: var(--gold); background: var(--surface-3); }
-      .cal-day.empty { background: transparent; border: none; pointer-events: none; }
-      .cal-day.active { border-color: var(--gold-bright); box-shadow: inset 0 0 10px rgba(212,160,23,0.2); }
-      
+      .cal-day:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+      }
+      .cal-day.empty {
+        background: transparent;
+        border: none;
+        pointer-events: none;
+      }
+      .cal-day.active {
+        border-color: var(--gold-bright);
+        box-shadow: inset 0 0 10px rgba(212, 160, 23, 0.2);
+      }
+
       .cal-date {
-        font-size: 13px; color: var(--text-muted); font-family: sans-serif;
+        font-size: 13px;
+        color: var(--text-muted);
+        font-family: sans-serif;
       }
       .cal-day.today .cal-date {
-        color: var(--gold-bright); font-weight: bold;
+        color: var(--gold-bright);
+        font-weight: bold;
       }
 
       .cal-stamp {
-        flex: 1; display: flex; align-items: center; justify-content: center;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 28px; /* Taille pour les emojis temporaires */
       }
 
       .calendar-legend {
-        display: flex; justify-content: center; gap: 20px; margin-top: 24px;
-        font-size: 13px; color: var(--text-muted); font-style: italic;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 24px;
+        font-size: 13px;
+        color: var(--text-muted);
+        font-style: italic;
       }
 
       /* --- Section Droite (Détails) --- */
       .profil-details-section {
-        padding: 30px; background: var(--surface-1);
+        padding: 30px;
+        background: var(--surface-1);
       }
-      
+
       #detail-date-title {
-        font-family: 'Cinzel', serif; font-size: 18px; color: var(--text-primary);
-        margin-top: 0; margin-bottom: 24px; border-bottom: 1px solid var(--border);
+        font-family: 'Cinzel', serif;
+        font-size: 18px;
+        color: var(--text-primary);
+        margin-top: 0;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border);
         padding-bottom: 10px;
       }
 
       .detail-stats-box {
-        display: flex; flex-direction: column; gap: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
       }
       .stat-row {
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         font-size: 16px;
       }
       .stat-divider {
-        border: none; border-top: 1px dashed var(--border-strong); margin: 8px 0;
+        border: none;
+        border-top: 1px dashed var(--border-strong);
+        margin: 8px 0;
       }
       .stat-val {
-        font-family: 'Cinzel', serif; font-size: 18px; font-weight: 600;
+        font-family: 'Cinzel', serif;
+        font-size: 18px;
+        font-weight: 600;
       }
 
       @media (max-width: 900px) {
-        .profil-layout { grid-template-columns: 1fr; }
-        .profil-calendar-section { border-right: none; border-bottom: 1px solid var(--border); }
-        #btn-logout { right: 152px; }
-        #btn-profil { right: 116px; }
+        .profil-layout {
+          grid-template-columns: 1fr;
+        }
+        .profil-calendar-section {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        #btn-logout {
+          right: 152px;
+        }
+        #btn-profil {
+          right: 116px;
+        }
+      }
+
+      /* Nouveau style pour le bouton Reset dans l'en-tête */
+      .btn-reset-stats {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .btn-reset-stats:hover:not(:disabled) {
+        color: #e08080;
+        background: rgba(140, 48, 48, 0.15);
+        transform: rotate(-30deg);
+      }
+      .btn-reset-stats:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      /* Hover du bouton quitter exploration */
+      #btn-exploration-quitter:hover {
+        background: rgba(212, 160, 23, 0.25) !important;
+        color: var(--gold-bright) !important;
       }
     </style>
 
@@ -1586,7 +1722,9 @@
         <h1>磨き &nbsp;MIGAKI</h1>
         <div class="subtitle" id="header-subtitle"></div>
       </div>
-      <button id="btn-profil" title="Mon Profil" aria-label="Mon Profil">📊</button>
+      <button id="btn-profil" title="Mon Profil" aria-label="Mon Profil">
+        📊
+      </button>
       <button id="btn-logout"></button>
       <button id="btn-lang" aria-label="Changer de langue"></button>
       <button
@@ -1681,6 +1819,41 @@
                 </div>
               </div>
             </div>
+            <button
+              id="btn-exploration-retour"
+              style="
+                display: none;
+                padding: 7px 12px;
+                font-family: 'Cinzel', serif;
+                font-size: 13px;
+                background: transparent;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius);
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.2s;
+              "
+            >
+              ◀ Retour
+            </button>
+            <button
+              id="btn-exploration-quitter"
+              style="
+                display: none;
+                padding: 7px 12px;
+                font-family: 'Cinzel', serif;
+                font-size: 13px;
+                background: rgba(212, 160, 23, 0.1);
+                border: 1px solid rgba(212, 160, 23, 0.4);
+                border-radius: var(--radius);
+                color: var(--gold);
+                cursor: pointer;
+                transition: all 0.2s;
+                margin-left: auto;
+              "
+            >
+              ⚔️ S'entraîner
+            </button>
             <div id="compteur-vies">
               <div class="vie" id="vie-1">♥</div>
               <div class="vie" id="vie-2">♥</div>
@@ -1740,12 +1913,23 @@
             class="btn-action"
             disabled
           ></button>
-          <button id="btn-reset" class="btn-action" disabled></button>
+
+          <button id="btn-mode-exploration" class="btn-action" disabled>
+            🧭 &nbsp;Exploration
+          </button>
         </div>
 
         <div class="panel">
           <div class="panel-header">
             <span class="panel-title" id="panel-progression-titre"></span>
+            <button
+              id="btn-reset"
+              class="btn-reset-stats"
+              title="Réinitialiser les statistiques"
+              disabled
+            >
+              ↺
+            </button>
           </div>
           <div id="bloc-statistiques">
             <div id="barre-progression-globale">
@@ -1830,64 +2014,82 @@
       </div>
     </div>
 
-</div> <div id="modal-profil" class="modal-overlay">
-  <div class="modal-content">
-    <button id="btn-close-profil" class="modal-close">✕</button>
-    <div class="profil-layout">
-      
-      <div class="profil-calendar-section">
-        <div class="calendar-header">
-          <button class="btn-cal-nav" id="cal-prev">◀</button>
-          <h2 id="cal-month-title">Mois Année</h2>
-          <button class="btn-cal-nav" id="cal-next">▶</button>
-        </div>
-        <div class="calendar-days-header">
-          <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-        </div>
-        <div class="calendar-grid" id="calendar-grid">
+    <div id="modal-profil" class="modal-overlay">
+      <div class="modal-content">
+        <button id="btn-close-profil" class="modal-close">✕</button>
+        <div class="profil-layout">
+          <div class="profil-calendar-section">
+            <div class="calendar-header">
+              <button class="btn-cal-nav" id="cal-prev">◀</button>
+              <h2 id="cal-month-title">Mois Année</h2>
+              <button class="btn-cal-nav" id="cal-next">▶</button>
+            </div>
+            <div class="calendar-days-header">
+              <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span
+              ><span>Ven</span><span>Sam</span><span>Dim</span>
+            </div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+            <div class="calendar-legend">
+              <span>🐾 Échauffement</span>
+              <span>🐈 Bon entraînement</span>
+              <span>🐅 Try Hard</span>
+            </div>
           </div>
-        <div class="calendar-legend">
-          <span>🐾 Échauffement</span>
-          <span>🐈 Bon entraînement</span>
-          <span>🐅 Try Hard</span>
+
+          <div class="profil-details-section">
+            <h3 id="detail-date-title">Aujourd'hui</h3>
+
+            <div class="detail-stats-box">
+              <div class="stat-row">
+                <span class="stat-label">Séquences jouées</span>
+                <span class="stat-val text-primary" id="detail-jouees">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Séquences visionnées</span>
+                <span class="stat-val text-muted" id="detail-vues">0</span>
+              </div>
+              <hr class="stat-divider" />
+              <div class="stat-row">
+                <span class="stat-label">Séquences Parfaites 🟢</span>
+                <span
+                  class="stat-val"
+                  style="color: #80cc70"
+                  id="detail-parfaits"
+                  >0</span
+                >
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Séquences avec Erreurs 🟠</span>
+                <span
+                  class="stat-val"
+                  style="color: #e8a060"
+                  id="detail-oranges"
+                  >0</span
+                >
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Séquences Échouées 🔴</span>
+                <span class="stat-val" style="color: #e08080" id="detail-rouges"
+                  >0</span
+                >
+              </div>
+            </div>
+
+            <div
+              id="detail-kiloute-placeholder"
+              style="
+                text-align: center;
+                margin-top: 30px;
+                font-size: 60px;
+                opacity: 0.2;
+              "
+            >
+              🐈‍⬛
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="profil-details-section">
-        <h3 id="detail-date-title">Aujourd'hui</h3>
-        
-        <div class="detail-stats-box">
-          <div class="stat-row">
-            <span class="stat-label">Séquences jouées</span>
-            <span class="stat-val text-primary" id="detail-jouees">0</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Séquences visionnées</span>
-            <span class="stat-val text-muted" id="detail-vues">0</span>
-          </div>
-          <hr class="stat-divider" />
-          <div class="stat-row">
-            <span class="stat-label">Séquences Parfaites 🟢</span>
-            <span class="stat-val" style="color:#80cc70" id="detail-parfaits">0</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Séquences avec Erreurs 🟠</span>
-            <span class="stat-val" style="color:#e8a060" id="detail-oranges">0</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Séquences Échouées 🔴</span>
-            <span class="stat-val" style="color:#e08080" id="detail-rouges">0</span>
-          </div>
-        </div>
-
-        <div id="detail-kiloute-placeholder" style="text-align: center; margin-top: 30px; font-size: 60px; opacity: 0.2;">
-          🐈‍⬛
-        </div>
-      </div>
-
     </div>
-  </div>
-</div>
 
     <button id="btn-quitter-presentation"></button>
     <div id="sync-indicator"></div>
@@ -1905,7 +2107,7 @@
         isAdmin,
         getUser,
         ajouterActivite,
-        chargerActiviteMois
+        chargerActiviteMois,
       } from './supabase.js';
       import { initI18n, t, getLang, setLang } from './i18n.js';
 
@@ -2204,7 +2406,6 @@
         }
       });
 
-
       /* =============================================
          MODALE PROFIL & CALENDRIER (FRONTEND)
       ============================================= */
@@ -2213,7 +2414,7 @@
       const btnCloseProfil = document.getElementById('btn-close-profil');
       const calendarGrid = document.getElementById('calendar-grid');
       const calMonthTitle = document.getElementById('cal-month-title');
-      
+
       let dateAffichee = new Date();
 
       if (estConnecte) {
@@ -2232,25 +2433,33 @@
         if (e.target === modalProfil) modalProfil.classList.remove('open');
       });
 
-      document.getElementById('cal-prev').addEventListener('click', async () => {
-        dateAffichee.setMonth(dateAffichee.getMonth() - 1);
-        await genererCalendrier(dateAffichee);
-      });
-      document.getElementById('cal-next').addEventListener('click', async () => {
-        dateAffichee.setMonth(dateAffichee.getMonth() + 1);
-        await genererCalendrier(dateAffichee);
-      });
+      document
+        .getElementById('cal-prev')
+        .addEventListener('click', async () => {
+          dateAffichee.setMonth(dateAffichee.getMonth() - 1);
+          await genererCalendrier(dateAffichee);
+        });
+      document
+        .getElementById('cal-next')
+        .addEventListener('click', async () => {
+          dateAffichee.setMonth(dateAffichee.getMonth() + 1);
+          await genererCalendrier(dateAffichee);
+        });
 
       /* Génération de la grille avec les vraies données */
       async function genererCalendrier(date) {
         /* Petit effet de chargement façon Matrix */
-        calendarGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-style: italic; color: var(--text-muted);">Analyse de la matrice en cours...</div>';
-        
+        calendarGrid.innerHTML =
+          '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-style: italic; color: var(--text-muted);">Analyse de la matrice en cours...</div>';
+
         const annee = date.getFullYear();
         const mois = date.getMonth();
-        
+
         const optionsMois = { month: 'long', year: 'numeric' };
-        calMonthTitle.innerText = date.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', optionsMois);
+        calMonthTitle.innerText = date.toLocaleDateString(
+          lang === 'fr' ? 'fr-FR' : 'en-US',
+          optionsMois
+        );
 
         /* On charge les données réelles du mois depuis Supabase */
         let activitesMois = [];
@@ -2272,30 +2481,37 @@
         }
 
         const aujourdhui = new Date();
-        
+
         for (let jour = 1; jour <= dernierJourDuMois.getDate(); jour++) {
           const dateCase = new Date(annee, mois, jour);
           const isToday = dateCase.toDateString() === aujourdhui.toDateString();
-          
+
           /* Astuce pour formater en YYYY-MM-DD (format Supabase) sans se faire piéger par le fuseau horaire */
           const anneeStr = dateCase.getFullYear();
           const moisStr = String(dateCase.getMonth() + 1).padStart(2, '0');
           const jourStr = String(dateCase.getDate()).padStart(2, '0');
           const dateRecherche = `${anneeStr}-${moisStr}-${jourStr}`;
-          
+
           /* On cherche si Kiloute a travaillé ce jour-là */
-          const statsJour = activitesMois.find(a => a.activity_date === dateRecherche) || {
-            sequences_played: 0, sequences_watched: 0, perfect_count: 0, orange_count: 0, red_count: 0
+          const statsJour = activitesMois.find(
+            (a) => a.activity_date === dateRecherche
+          ) || {
+            sequences_played: 0,
+            sequences_watched: 0,
+            perfect_count: 0,
+            orange_count: 0,
+            red_count: 0,
           };
 
-          const totalAction = statsJour.sequences_played + statsJour.sequences_watched;
-          
+          const totalAction =
+            statsJour.sequences_played + statsJour.sequences_watched;
+
           /* La logique de récompense : on ajuste les seuils selon ce que tu préfères ! */
           let vraiTampon = '';
           if (totalAction >= 80) vraiTampon = '🐅';
           else if (totalAction >= 30) vraiTampon = '🐈';
           else if (totalAction > 0) vraiTampon = '🐾';
-          
+
           if (dateCase > aujourdhui) vraiTampon = '';
 
           const dayDiv = document.createElement('div');
@@ -2307,21 +2523,36 @@
 
           /* Clic sur une case pour mettre à jour la colonne de droite */
           dayDiv.addEventListener('click', () => {
-            document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('active'));
+            document
+              .querySelectorAll('.cal-day')
+              .forEach((d) => d.classList.remove('active'));
             dayDiv.classList.add('active');
-            
-            const optionsJour = { weekday: 'long', day: 'numeric', month: 'long' };
-            document.getElementById('detail-date-title').innerText = dateCase.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', optionsJour);
-            
-            document.getElementById('detail-jouees').innerText = statsJour.sequences_played;
-            document.getElementById('detail-vues').innerText = statsJour.sequences_watched;
-            document.getElementById('detail-parfaits').innerText = statsJour.perfect_count;
-            document.getElementById('detail-oranges').innerText = statsJour.orange_count;
-            document.getElementById('detail-rouges').innerText = statsJour.red_count;
+
+            const optionsJour = {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+            };
+            document.getElementById('detail-date-title').innerText =
+              dateCase.toLocaleDateString(
+                lang === 'fr' ? 'fr-FR' : 'en-US',
+                optionsJour
+              );
+
+            document.getElementById('detail-jouees').innerText =
+              statsJour.sequences_played;
+            document.getElementById('detail-vues').innerText =
+              statsJour.sequences_watched;
+            document.getElementById('detail-parfaits').innerText =
+              statsJour.perfect_count;
+            document.getElementById('detail-oranges').innerText =
+              statsJour.orange_count;
+            document.getElementById('detail-rouges').innerText =
+              statsJour.red_count;
           });
 
           calendarGrid.appendChild(dayDiv);
-          
+
           /* Si on génère la case d'aujourd'hui, on force un clic dessus pour que les détails soient à jour ! */
           if (isToday) dayDiv.click();
         }

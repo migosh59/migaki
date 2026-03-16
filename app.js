@@ -117,6 +117,14 @@ const sousTitreFin = document.getElementById('sous-titre-fin');
 const finIcone = document.getElementById('fin-icone');
 const btnSuivante = document.getElementById('btn-suivante');
 const fileNameDisplay = document.getElementById('file-name-display');
+const btnModeExploration = document.getElementById('btn-mode-exploration');
+const btnExplorationRetour = document.getElementById('btn-exploration-retour');
+const btnExplorationQuitter = document.getElementById(
+  'btn-exploration-quitter'
+);
+let modeExplorationActif = false;
+let marqueursExploration =
+  []; /* Pour garder la trace des lettres (A, B, C...) sur le goban */
 
 /* =============================================
    ÉTAT GLOBAL
@@ -417,6 +425,15 @@ function arreterTout() {
   actionsExercice.style.display = 'none';
   commentaireSgf.style.display = 'none';
   gobanWrapper.classList.remove('ordi-pense');
+  modeExplorationActif = false;
+  btnExplorationRetour.style.display = 'none';
+  btnExplorationQuitter.style.display = 'none';
+
+  /* On remet le bouton d'action à son état d'origine */
+  btnModeExploration.innerHTML = '🧭 &nbsp;Exploration';
+  btnModeExploration.style.borderColor = '';
+  btnModeExploration.style.background = '';
+  btnModeExploration.style.color = '';
 }
 
 function extraireVariations(noeud, chemin) {
@@ -520,6 +537,117 @@ function animerProchainCoup() {
   }
 }
 
+/* =============================================
+   MODE EXPLORATION LIBRE
+============================================= */
+function lancerExploration() {
+  arreterTout();
+  document.body.classList.remove('mode-presentation');
+  redimensionnerGoban(calculerTailleGoban());
+
+  modeExplorationActif = true;
+  noeudCourant = kifu.root;
+  reinitialiserMoteur();
+
+  /* On adapte l'interface : on cache les vies et le bouton d'abandon, on affiche le bouton Retour */
+  actionsExercice.style.display = 'block';
+  document.getElementById('compteur-vies').style.display = 'none';
+
+  /* Affichage des boutons d'exploration au-dessus du goban */
+  btnExplorationRetour.style.display = 'inline-block';
+  btnExplorationQuitter.style.display = 'inline-block';
+
+  /* On transforme le bouton d'action principal en mode "S'entraîner" */
+  btnModeExploration.innerHTML = "⚔️ &nbsp;S'entraîner";
+  btnModeExploration.style.borderColor = 'rgba(212, 160, 23, 0.42)';
+  btnModeExploration.style.background = 'rgba(212, 160, 23, 0.07)';
+  btnModeExploration.style.color = 'var(--gold)';
+
+  btnSolution.style.display = 'none';
+  btnExplorationRetour.style.display = 'inline-block';
+  infoVariation.style.display = 'block';
+  commentaireSgf.style.display = 'none';
+
+  infoNom.innerText = window.t
+    ? window.t('exploration_titre')
+    : 'Exploration Libre';
+  infoComment.innerText = window.t
+    ? window.t('exploration_desc')
+    : 'Cliquez sur les lettres pour naviguer dans les branches.';
+  infoNom.setAttribute('data-sig', '');
+
+  goban.removeAllObjects();
+  if (kifu.root.setup) {
+    for (const s of kifu.root.setup) placerPierreSetup(s.x, s.y, s.c);
+  }
+
+  afficherCoupsPossibles();
+  afficherCommentaire(noeudCourant);
+}
+
+function afficherCoupsPossibles() {
+  /* 1. On nettoie les anciennes lettres */
+  marqueursExploration.forEach((m) => goban.removeObject(m));
+  marqueursExploration = [];
+
+  /* 2. On affiche les nouvelles lettres pour les enfants de ce noeud */
+  if (!noeudCourant || !noeudCourant.children) return;
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  noeudCourant.children.forEach((enfant, index) => {
+    if (enfant.move) {
+      const lettre = alphabet[index % 26];
+      const m = {
+        x: enfant.move.x,
+        y: enfant.move.y,
+        type: 'LB',
+        text: lettre,
+      };
+      goban.addObject(m);
+      marqueursExploration.push(m);
+    }
+  });
+}
+
+function retourExploration() {
+  if (!modeExplorationActif || !noeudCourant || !noeudCourant.parent) return;
+
+  /* L'astuce pour "annuler" un coup proprement avec WGo.js : 
+     on recalcule tout depuis le début jusqu'au parent du noeud actuel ! */
+  const cible = noeudCourant.parent;
+  const chemin = [];
+  let temp = cible;
+  while (temp && temp.parent) {
+    chemin.unshift(temp);
+    temp = temp.parent;
+  }
+
+  goban.removeAllObjects();
+  reinitialiserMoteur();
+  if (kifu.root.setup) {
+    for (const s of kifu.root.setup) placerPierreSetup(s.x, s.y, s.c);
+  }
+
+  for (const noeud of chemin) {
+    if (noeud.move)
+      jouerCoupAvecCaptures(noeud.move.x, noeud.move.y, noeud.move.c);
+  }
+
+  noeudCourant = cible;
+  afficherCoupsPossibles();
+  afficherCommentaire(noeudCourant);
+}
+
+/* On branche les écouteurs sur les nouveaux boutons */
+/* L'interrupteur du mode exploration */
+btnModeExploration.addEventListener('click', () => {
+  if (modeExplorationActif) lancerExercice();
+  else lancerExploration();
+});
+
+/* Le bouton dans la barre au-dessus du goban */
+btnExplorationQuitter.addEventListener('click', lancerExercice);
+btnExplorationRetour.addEventListener('click', retourExploration);
+
 function lancerPresentation() {
   if (toutesLesVariations.length === 0) return; /* Sécurité anti-écran noir */
   arreterTout();
@@ -563,6 +691,9 @@ function relancerSequence(variationForcee = null) {
     ? window.t('joue_pour_decouvrir')
     : 'Joue pour découvrir la suite !';
   infoNom.setAttribute('data-sig', '');
+
+  document.getElementById('compteur-vies').style.display = 'flex';
+  btnSolution.style.display = 'inline-block';
 
   /* --- L'ASTUCE EST ICI --- */
   /* Si la variable est un tableau (notre séquence), on l'utilise.
@@ -756,6 +887,19 @@ function terminerVariation() {
    GESTION DES CLICS JOUEUR
 ============================================= */
 goban.addEventListener('click', function (x, y) {
+  if (modeExplorationActif) {
+    /* On cherche si le clic correspond à un enfant possible (une lettre) */
+    const enfantChoisi = noeudCourant.children.find(
+      (e) => e.move && e.move.x === x && e.move.y === y
+    );
+    if (enfantChoisi) {
+      jouerCoupAvecCaptures(x, y, enfantChoisi.move.c);
+      noeudCourant = enfantChoisi;
+      afficherCoupsPossibles();
+      afficherCommentaire(noeudCourant);
+    }
+    return; /* On s'arrête là pour ce clic ! */
+  }
   if (!modeExerciceActif || !noeudCourant) return;
   if (
     noeudCourant.children.length > 0 &&
@@ -1031,6 +1175,7 @@ function chargerContenuSgf(contenu, nom, sgfId, progressionServeur) {
 
   /* On réactive les boutons d'action */
   btnModePresentation.disabled = false;
+  btnModeExploration.disabled = false;
   btnReset.disabled = false;
 
   redimensionnerGoban(calculerTailleGoban());
