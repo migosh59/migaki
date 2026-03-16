@@ -1493,14 +1493,10 @@
       }
 
       .modal-content {
+        width: 95vw;
+        max-width: 1300px;
+        height: 85vh;
         background: var(--surface-1);
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius);
-        width: 95%;
-        max-width: 1000px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        position: relative;
-        overflow: hidden;
       }
 
       .modal-close {
@@ -1521,15 +1517,14 @@
 
       .profil-layout {
         display: grid;
-        grid-template-columns: 2fr 1fr;
-        min-height: 500px;
+        grid-template-columns: 1fr 350px; /* Plus de place pour la grille */
+        height: 100%;
       }
 
-      /* --- Section Gauche (Calendrier) --- */
       .profil-calendar-section {
-        padding: 30px;
-        border-right: 1px solid var(--border);
-        background: var(--panel-bg);
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
       }
 
       .calendar-header {
@@ -1573,7 +1568,10 @@
       .calendar-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 6px;
+        gap: 12px;
+        padding: 20px;
+        /* On force les cases à être de beaux carrés */
+        grid-auto-rows: 1fr;
       }
 
       .cal-day {
@@ -1587,6 +1585,7 @@
         cursor: pointer;
         transition: all 0.2s;
         position: relative;
+        overflow: hidden; /* NOUVEAU : Empêche l'image de déborder des coins arrondis */
       }
       .cal-day:hover {
         border-color: var(--gold);
@@ -1600,24 +1599,61 @@
       .cal-day.active {
         border-color: var(--gold-bright);
         box-shadow: inset 0 0 10px rgba(212, 160, 23, 0.2);
+        z-index: 2;
       }
 
       .cal-date {
-        font-size: 13px;
-        color: var(--text-muted);
-        font-family: sans-serif;
+        font-size: 1.2rem;
+        color: #ffffff;
+        font-family: 'Cinzel', serif;
+        position: relative;
+        z-index: 2;
+        padding: 5px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+        pointer-events: none; /* Pour que le clic passe à travers vers la case */
       }
       .cal-day.today .cal-date {
         color: var(--gold-bright);
         font-weight: bold;
       }
 
-      .cal-stamp {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px; /* Taille pour les emojis temporaires */
+      /* Le fond d'écran Kiloute utilisant les fichiers séparés */
+      .kiloute-bg {
+        position: absolute;
+        inset: 0; /* Remplit toute la case */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 1;
+        opacity: 0.9;
+        transition: transform 0.3s ease;
+      }
+
+      /* Attribution des fichiers aux classes correspondantes */
+      .stamp-1 {
+        background-image: url('./bronze.png');
+      }
+      .stamp-2 {
+        background-image: url('./argent.png');
+      }
+      .stamp-3 {
+        background-image: url('./or.png');
+      }
+
+      /* Effet de zoom au survol pour le style */
+      .cal-day:hover .kiloute-bg {
+        transform: scale(1.1);
+      }
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       .calendar-legend {
@@ -2031,9 +2067,51 @@
             </div>
             <div class="calendar-grid" id="calendar-grid"></div>
             <div class="calendar-legend">
-              <span>🐾 Échauffement</span>
-              <span>🐈 Bon entraînement</span>
-              <span>🐅 Try Hard</span>
+              <span style="display: flex; align-items: center; gap: 8px">
+                <div
+                  style="
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 4px;
+                    position: relative;
+                    overflow: hidden;
+                    border: 1px solid var(--border-strong);
+                  "
+                >
+                  <div class="kiloute-bg stamp-1" style="opacity: 1"></div>
+                </div>
+                <span id="legende-bronze">Échauffement</span>
+              </span>
+              <span style="display: flex; align-items: center; gap: 8px">
+                <div
+                  style="
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 4px;
+                    position: relative;
+                    overflow: hidden;
+                    border: 1px solid var(--border-strong);
+                  "
+                >
+                  <div class="kiloute-bg stamp-2" style="opacity: 1"></div>
+                </div>
+                <span id="legende-argent">Bon entraînement</span>
+              </span>
+              <span style="display: flex; align-items: center; gap: 8px">
+                <div
+                  style="
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 4px;
+                    position: relative;
+                    overflow: hidden;
+                    border: 1px solid var(--border-strong);
+                  "
+                >
+                  <div class="kiloute-bg stamp-3" style="opacity: 1"></div>
+                </div>
+                <span id="legende-or">Try Hard</span>
+              </span>
             </div>
           </div>
 
@@ -2251,16 +2329,23 @@
 
             <div class="detail-stats-box">
               <div class="stat-row">
-                <span class="stat-label">Séquences jouées</span>
+                <span class="stat-label" id="lbl-detail-jouees"
+                  >Séquences jouées</span
+                >
                 <span class="stat-val text-primary" id="detail-jouees">0</span>
               </div>
               <div class="stat-row">
-                <span class="stat-label">Séquences visionnées</span>
+                <span class="stat-label" id="lbl-detail-vues"
+                  >Séquences visionnées</span
+                >
                 <span class="stat-val text-muted" id="detail-vues">0</span>
               </div>
               <hr class="stat-divider" />
               <div class="stat-row">
-                <span class="stat-label">Séquences Parfaites 🟢</span>
+                <span class="stat-label"
+                  ><span id="lbl-detail-parfaites">Séquences Parfaites</span>
+                  🟢</span
+                >
                 <span
                   class="stat-val"
                   style="color: #80cc70"
@@ -2269,7 +2354,10 @@
                 >
               </div>
               <div class="stat-row">
-                <span class="stat-label">Séquences avec Erreurs 🟠</span>
+                <span class="stat-label"
+                  ><span id="lbl-detail-oranges">Séquences avec Erreurs</span>
+                  🟠</span
+                >
                 <span
                   class="stat-val"
                   style="color: #e8a060"
@@ -2278,7 +2366,10 @@
                 >
               </div>
               <div class="stat-row">
-                <span class="stat-label">Séquences Échouées 🔴</span>
+                <span class="stat-label"
+                  ><span id="lbl-detail-rouges">Séquences Échouées</span>
+                  🔴</span
+                >
                 <span class="stat-val" style="color: #e08080" id="detail-rouges"
                   >0</span
                 >
@@ -2391,6 +2482,48 @@
       document.getElementById('lien-aide').textContent = t('lien_aide');
       document.getElementById('lien-creer-sgf').textContent =
         t('lien_creer_sgf');
+
+      // --- Traductions de la modale Profil ---
+      document.querySelector('.global-stats-container h3').textContent = t(
+        'profil_stats_globales'
+      );
+      document.getElementById('detail-date-title').textContent =
+        t('profil_aujourdhui');
+
+      // Ciblage des labels de stats (Jouées, Vues, etc.)
+      const labels = document.querySelectorAll(
+        '.global-stats-container div[style*="font-size: 10px"]'
+      );
+      if (labels.length >= 5) {
+        labels[0].textContent = t('profil_jouees');
+        labels[1].textContent = t('profil_vues');
+        labels[2].textContent = t('profil_parfaites');
+        labels[3].textContent = t('profil_erreurs');
+        labels[4].textContent = t('profil_echecs');
+      }
+
+      // Légende du calendrier
+      document.getElementById('legende-bronze').textContent =
+        t('cal_echauffement');
+      document.getElementById('legende-argent').textContent =
+        t('cal_entrainement');
+      document.getElementById('legende-or').textContent = t('cal_tryhard');
+
+      /* Dans la partie init i18n de index.html */
+      document.getElementById('lbl-detail-jouees').textContent = t(
+        'profil_label_jouees'
+      );
+      document.getElementById('lbl-detail-vues').textContent =
+        t('profil_label_vues');
+      document.getElementById('lbl-detail-parfaites').textContent = t(
+        'profil_label_parfaites'
+      );
+      document.getElementById('lbl-detail-oranges').textContent = t(
+        'profil_label_oranges'
+      );
+      document.getElementById('lbl-detail-rouges').textContent = t(
+        'profil_label_rouges'
+      );
 
       // ── Bouton langue ──
       const btnLang = document.getElementById('btn-lang');
@@ -2660,9 +2793,8 @@
       /* Génération de la grille avec les vraies données */
       async function genererCalendrier(date) {
         /* Petit effet de chargement façon Matrix */
-        calendarGrid.innerHTML =
-          '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-style: italic; color: var(--text-muted);">Analyse de la matrice en cours...</div>';
-
+        /* Dans genererCalendrier(date) */
+        calendarGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-style: italic; color: var(--text-muted);">${t('cal_chargement')}</div>`;
         const annee = date.getFullYear();
         const mois = date.getMonth();
 
@@ -2733,19 +2865,18 @@
           const totalAction =
             statsJour.sequences_played + statsJour.sequences_watched;
 
-          /* La logique de récompense : on ajuste les seuils selon ce que tu préfères ! */
-          let vraiTampon = '';
-          if (totalAction >= 80) vraiTampon = '🐅';
-          else if (totalAction >= 30) vraiTampon = '🐈';
-          else if (totalAction > 0) vraiTampon = '🐾';
-
-          if (dateCase > aujourdhui) vraiTampon = '';
-
           const dayDiv = document.createElement('div');
           dayDiv.className = `cal-day ${isToday ? 'today active' : ''}`;
+
+          /* La logique de récompense : l'écusson devient un fond d'écran ! */
+          let tamponClass = '';
+          if (totalAction >= 80) tamponClass = 'stamp-3';
+          else if (totalAction >= 30) tamponClass = 'stamp-2';
+          else if (totalAction > 0) tamponClass = 'stamp-1';
+
           dayDiv.innerHTML = `
+            ${tamponClass ? `<div class="kiloute-bg ${tamponClass}" title="Tampon obtenu"></div>` : ''}
             <span class="cal-date">${jour}</span>
-            <span class="cal-stamp">${vraiTampon}</span>
           `;
 
           /* Clic sur une case pour mettre à jour la colonne de droite */

@@ -148,5 +148,21 @@
   "lien_aide": "Dojo Guide",
   "lien_creer_sgf": "Where to find sequences?",
   "exploration_titre": "Exploration Mode",
-  "exploration_desc": "Explore freely the SGF file"
+  "exploration_desc": "Explore freely the SGF file",
+  "profil_stats_globales": "Global Statistics",
+  "profil_jouees": "Played",
+  "profil_vues": "Watched",
+  "profil_parfaites": "Perfect",
+  "profil_erreurs": "Errors",
+  "profil_echecs": "Failed",
+  "profil_aujourdhui": "Today",
+  "cal_echauffement": "Warm-up",
+  "cal_entrainement": "Good practice",
+  "cal_tryhard": "Try Hard",
+  "cal_chargement": "Analyzing matrix...",
+  "profil_label_jouees": "Sequences played",
+  "profil_label_vues": "Sequences watched",
+  "profil_label_parfaites": "Perfect Sequences",
+  "profil_label_oranges": "Sequences with Errors",
+  "profil_label_rouges": "Failed Sequences"
 }
