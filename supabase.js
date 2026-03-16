@@ -305,3 +305,15 @@ export async function chargerActiviteMois(annee, mois) {
   }
   return data || [];
 }
+
+export async function chargerStatsGlobales() {
+  const user = await getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase.rpc('get_all_time_stats');
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  return data;
+}

@@ -561,16 +561,20 @@
         const { data: sgfs } = await supabase
           .from('sgf_files')
           .select('id, is_shared');
-        const { count: varCount } = await supabase
-          .from('variation_progress')
-          .select('*', { count: 'exact', head: true });
+
+        /* NOUVEAU : On supprime l'appel à variation_progress !
+           On calcule le total global en additionnant les séquences de chaque joueur */
+        const totalSequences = (users || []).reduce((somme, user) => {
+          return somme + (user.variation_count || 0);
+        }, 0);
 
         document.getElementById('stat-users').textContent = users?.length ?? 0;
         document.getElementById('stat-sgf-total').textContent =
           sgfs?.length ?? 0;
         document.getElementById('stat-sgf-shared').textContent =
           sgfs?.filter((s) => s.is_shared).length ?? 0;
-        document.getElementById('stat-variations').textContent = varCount ?? 0;
+        document.getElementById('stat-variations').textContent =
+          totalSequences; /* 👈 Le vrai total est injecté ici */
       }
 
       // ── Liste utilisateurs ──
