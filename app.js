@@ -503,6 +503,15 @@ function animerProchainCoup() {
   } else {
     indexVariationActuelle = toutesLesVariations.indexOf(choisirVariation());
     indexCoupActuel = 0;
+
+    /* --- SIGNAL D'ACTIVITÉ (Séquence visionnée) --- */
+    window.dispatchEvent(
+      new CustomEvent('log-activite', {
+        detail: { jouees: 0, vues: 1, parfaits: 0, oranges: 0, rouges: 0 },
+      })
+    );
+    /* ---------------------------------------------- */
+
     timerPresentation = setTimeout(() => {
       if (!modePresentationActif) return;
       goban.removeAllObjects();
@@ -720,6 +729,27 @@ function terminerVariation() {
   }
   // Sync Supabase
   if (varJouee) sauvegarderVariationServeur(genererSignature(varJouee));
+
+  // Sync Supabase
+  if (varJouee) sauvegarderVariationServeur(genererSignature(varJouee));
+
+  /* --- SIGNAL D'ACTIVITÉ (Séquence jouée) --- */
+  let estParfait = compteurErreurs === 0 && !abandonSequence ? 1 : 0;
+  let estOrange = compteurErreurs > 0 && !abandonSequence ? 1 : 0;
+  let estRouge = abandonSequence ? 1 : 0;
+
+  window.dispatchEvent(
+    new CustomEvent('log-activite', {
+      detail: {
+        jouees: 1,
+        vues: 0,
+        parfaits: estParfait,
+        oranges: estOrange,
+        rouges: estRouge,
+      },
+    })
+  );
+  /* ------------------------------------------ */
 }
 
 /* =============================================
@@ -876,6 +906,13 @@ function visualiserVariation(variation) {
       sousTitreFin.innerText = data.nom;
       messageFin.className = 'fin-visu';
       messageFin.style.display = 'block';
+      /* --- SIGNAL D'ACTIVITÉ (Séquence visionnée) --- */
+      window.dispatchEvent(
+        new CustomEvent('log-activite', {
+          detail: { jouees: 0, vues: 1, parfaits: 0, oranges: 0, rouges: 0 },
+        })
+      );
+      /* ---------------------------------------------- */
     }
   }
   animer();

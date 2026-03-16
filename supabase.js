@@ -263,3 +263,45 @@ export async function toggleSgfClubStatus(sgfId, isClub) {
     .eq('id', sgfId);
   return !error;
 }
+
+/* ─── Statistiques Quotidiennes (Calendrier) ───────────── */
+export async function ajouterActivite(
+  jouees = 0,
+  vues = 0,
+  parfaits = 0,
+  oranges = 0,
+  rouges = 0
+) {
+  const user = await getUser();
+  if (!user) return;
+
+  await supabase.rpc('log_daily_activity', {
+    p_played: jouees,
+    p_watched: vues,
+    p_perfect: parfaits,
+    p_orange: oranges,
+    p_red: rouges,
+  });
+}
+
+export async function chargerActiviteMois(annee, mois) {
+  const user = await getUser();
+  if (!user) return [];
+
+  /* Le mois est 0-indexé en JS (0 = Janvier), on formatte les dates de début et fin */
+  const start = new Date(annee, mois, 1).toISOString().split('T')[0];
+  const end = new Date(annee, mois + 1, 0).toISOString().split('T')[0];
+
+  const { data, error } = await supabase
+    .from('daily_activity')
+    .select('*')
+    .eq('user_id', user.id)
+    .gte('activity_date', start)
+    .lte('activity_date', end);
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+  return data || [];
+}
