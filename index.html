@@ -210,6 +210,90 @@
         animation: fadeRise 1.5s ease-out 0.5s forwards;
       }
 
+      /* =============================================
+           BOUTONS DU HEADER (Unifiés et Responsives)
+        ============================================= */
+      .header-actions {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #btn-admin {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      /* Le style commun à tous tes boutons d'en-tête */
+      .btn-header {
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.22s;
+        color: var(--text-secondary);
+        font-family: 'Cinzel', serif;
+        letter-spacing: 0.05em;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-header:hover {
+        border-color: var(--gold);
+        background: var(--surface-3);
+        color: var(--gold-bright);
+      }
+
+      /* Petits ajustements pour les boutons avec Émojis */
+      #btn-profil,
+      #btn-theme,
+      #btn-lang {
+        font-family: 'Crimson Pro', serif;
+        font-size: 16px;
+        padding: 6px 10px;
+      }
+
+      /* --- La Magie pour Mobile --- */
+      @media (max-width: 768px) {
+        #app-header {
+          flex-direction: column;
+          padding: 16px 10px;
+          gap: 14px; /* Espace entre le titre et les boutons */
+        }
+        .header-titles {
+          order: 1; /* Reste en haut */
+        }
+
+        /* On désactive les positions absolues */
+        .header-actions,
+        #btn-admin {
+          position: static;
+          transform: none;
+        }
+
+        .header-actions {
+          order: 2; /* Passe sous le titre */
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap; /* S'il y a trop de boutons, ils passent à la ligne proprement */
+        }
+
+        #btn-admin {
+          order: 3; /* Passe tout en bas si activé */
+          margin-top: -6px;
+        }
+      }
+
       @keyframes fadeRise {
         from {
           opacity: 0;
@@ -235,68 +319,6 @@
           var(--gold),
           transparent
         );
-      }
-
-      #btn-theme {
-        position: absolute;
-        right: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--surface-2);
-        border: 1px solid var(--border-strong);
-        border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.22s;
-        color: var(--text-secondary);
-        line-height: 1;
-      }
-      #btn-theme:hover {
-        border-color: var(--gold);
-        background: var(--surface-3);
-      }
-
-      #btn-lang {
-        position: absolute;
-        right: 76px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--surface-2);
-        border: 1px solid var(--border-strong);
-        border-radius: 20px;
-        padding: 6px 10px;
-        font-size: 15px;
-        cursor: pointer;
-        transition: all 0.22s;
-        line-height: 1;
-      }
-      #btn-lang:hover {
-        border-color: var(--gold);
-        background: var(--surface-3);
-      }
-
-      #btn-logout {
-        position: absolute;
-        right: 140px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--surface-2);
-        border: 1px solid var(--border-strong);
-        border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 13px;
-        cursor: pointer;
-        transition: all 0.22s;
-        color: var(--text-secondary);
-        font-family: 'Cinzel', serif;
-        letter-spacing: 0.05em;
-        line-height: 1;
-      }
-      #btn-logout:hover {
-        border-color: var(--gold);
-        background: var(--surface-3);
-        color: var(--gold-bright);
       }
 
       /* =============================================
@@ -1296,16 +1318,7 @@
           padding: 5px 9px;
           font-size: 14px;
         }
-        #btn-lang {
-          right: 116px;
-          padding: 5px 7px;
-          font-size: 13px;
-        }
-        #btn-logout {
-          right: 152px;
-          padding: 5px 9px;
-          font-size: 11px;
-        }
+
         #colonne-gauche {
           gap: 10px;
           padding: 10px 10px 0;
@@ -1451,29 +1464,6 @@
         opacity: 0.3;
         filter: grayscale(80%);
         border-color: transparent !important;
-      }
-
-      /* =============================================
-         MODALE PROFIL & CALENDRIER
-      ============================================= */
-      #btn-profil {
-        position: absolute;
-        right: 134px; /* On le place entre le bouton Langue et Quitter */
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--surface-2);
-        border: 1px solid var(--border-strong);
-        border-radius: 20px;
-        padding: 6px 10px;
-        font-size: 15px;
-        cursor: pointer;
-        transition: all 0.22s;
-        line-height: 1;
-        display: none; /* Masqué par défaut si non connecté */
-      }
-      #btn-profil:hover {
-        border-color: var(--gold);
-        background: var(--surface-3);
       }
 
       /* On décale le bouton Quitter pour faire de la place */
@@ -1720,12 +1710,6 @@
           border-right: none;
           border-bottom: 1px solid var(--border);
         }
-        #btn-logout {
-          right: 152px;
-        }
-        #btn-profil {
-          right: 116px;
-        }
       }
 
       /* Nouveau style pour le bouton Reset dans l'en-tête */
@@ -1762,42 +1746,38 @@
   </head>
   <body>
     <header id="app-header">
+      <button id="btn-admin" class="btn-header" style="display: none"></button>
+
       <div class="header-titles">
         <h1>磨き &nbsp;MIGAKI</h1>
         <div class="subtitle" id="header-subtitle"></div>
       </div>
-      <button id="btn-profil" title="Mon Profil" aria-label="Mon Profil">
-        📊
-      </button>
-      <button id="btn-logout"></button>
-      <button id="btn-lang" aria-label="Changer de langue"></button>
-      <button
-        id="btn-theme"
-        title="Changer de thème"
-        aria-label="Changer de thème"
-      >
-        ☀️
-      </button>
-      <button
-        id="btn-admin"
-        style="
-          position: absolute;
-          left: 18px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: var(--surface-2);
-          border: 1px solid var(--border-strong);
-          border-radius: 20px;
-          padding: 6px 14px;
-          font-size: 13px;
-          cursor: pointer;
-          transition: all 0.22s;
-          color: var(--text-muted);
-          font-family: 'Cinzel', serif;
-          letter-spacing: 0.05em;
-          display: none;
-        "
-      ></button>
+
+      <div class="header-actions">
+        <button
+          id="btn-profil"
+          class="btn-header"
+          title="Mon Profil"
+          aria-label="Mon Profil"
+          style="display: none"
+        >
+          📊
+        </button>
+        <button id="btn-logout" class="btn-header"></button>
+        <button
+          id="btn-lang"
+          class="btn-header"
+          aria-label="Changer de langue"
+        ></button>
+        <button
+          id="btn-theme"
+          class="btn-header"
+          title="Changer de thème"
+          aria-label="Changer de thème"
+        >
+          ☀️
+        </button>
+      </div>
     </header>
 
     <div id="layout-principal">
