@@ -123,22 +123,29 @@ const btnBotQuitter = document.getElementById('btn-bot-quitter');
 const modalSetupBot = document.getElementById('modal-setup-bot');
 const btnCloseSetupBot = document.getElementById('btn-close-setup-bot');
 const btnStartBotGame = document.getElementById('btn-start-bot-game-label');
-/* --- CHANGEMENT DYNAMIQUE DU KOMI SELON LE HANDICAP --- */
+
+/* --- GESTION DYNAMIQUE DU KOMI --- */
 const botHandicapSelect = document.getElementById('bot-handicap');
 const botKomiInput = document.getElementById('bot-komi');
+const botRulesSelect = document.getElementById('bot-rules');
 
-if (botHandicapSelect && botKomiInput) {
-  botHandicapSelect.addEventListener('change', (e) => {
-    const handicapValue = parseInt(e.target.value, 10);
+function ajusterKomi() {
+  if (!botHandicapSelect || !botKomiInput || !botRulesSelect) return;
+  const handicapValue = parseInt(botHandicapSelect.value, 10);
+  const rulesValue = botRulesSelect.value;
 
-    /* Si handicap > 0, on force à 0.5, sinon on remet le standard 6.5 */
-    if (handicapValue > 0) {
-      botKomiInput.value = '0.5';
-    } else {
-      botKomiInput.value = '6.5';
-    }
-  });
+  /* Règle universelle : s'il y a du handicap, le komi tombe à 0.5 */
+  if (handicapValue > 0) {
+    botKomiInput.value = '0.5';
+  } else {
+    /* Sinon, on adapte selon la règle choisie */
+    botKomiInput.value = rulesValue === 'chinese' ? '7.5' : '6.5';
+  }
 }
+
+/* On écoute les changements sur les deux menus déroulants */
+if (botHandicapSelect) botHandicapSelect.addEventListener('change', ajusterKomi);
+if (botRulesSelect) botRulesSelect.addEventListener('change', ajusterKomi);
 
 const blocPrisonniers = document.getElementById('compteur-prisonniers');
 const affichagePrisonniersNoir = document.getElementById('score-prisonniers-noir');
@@ -517,13 +524,15 @@ if (btnStartBotGame)
 
     const handicap = document.getElementById('bot-handicap').value;
     const komi = document.getElementById('bot-komi').value;
-    const size = document.getElementById('bot-board-size').value; /* NOUVEAU */
+    const size = document.getElementById('bot-board-size').value;
+    const rules = document.getElementById('bot-rules').value;
+    const level = document.getElementById('bot-level').value;
 
     modalSetupBot.classList.remove('open');
-    await lancerPartieBot(userColor, handicap, komi, size); /* NOUVEAU */
+    await lancerPartieBot(userColor, handicap, komi, size, rules, level);
   });
 /* --- LANCEMENT DE LA PARTIE --- */
-async function lancerPartieBot(userColor, handicap, komi, size) {
+async function lancerPartieBot(userColor, handicap, komi, size, rules, level) {
   arreterTout();
   document.body.classList.remove('mode-presentation');
 
@@ -585,7 +594,10 @@ async function lancerPartieBot(userColor, handicap, komi, size) {
       body: JSON.stringify({
         handicap: parseInt(handicap, 10) || 0,
         komi: parseFloat(komi) || 6.5,
-        size: tailleGrille /* On envoie la taille au serveur ! */,
+        size: tailleGrille,
+        /* --- ON ENVOIE LES PARAMÈTRES AU NAS --- */
+        rules: rules,
+        level: parseInt(level, 10) || 10,
       }),
     });
 

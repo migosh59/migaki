@@ -2262,6 +2262,112 @@
             margin-bottom: 20px;
           "
         >
+          <div id="lbl-bot-config-regles" class="modal-section-title" style="flex-basis: 130px; margin-bottom: 0">
+            Règles
+          </div>
+          <div style="position: relative; width: 140px">
+            <select
+              id="bot-rules"
+              style="
+                width: 100%;
+                appearance: none;
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                color: var(--text-primary);
+                padding: 10px 14px;
+                border-radius: var(--radius);
+                font-family: 'Crimson Pro', serif;
+                font-size: 16px;
+                cursor: pointer;
+                outline: none;
+              "
+            >
+              <option value="japanese">Japonaises</option>
+              <option value="chinese">Chinoises</option>
+            </select>
+            <span
+              style="
+                position: absolute;
+                right: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: var(--text-muted);
+                font-size: 11px;
+              "
+            >
+              ▾
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="modal-section"
+          style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+          "
+        >
+          <div id="lbl-bot-config-niveau" class="modal-section-title" style="flex-basis: 130px; margin-bottom: 0">
+            Niveau (1-10)
+          </div>
+          <div style="position: relative; width: 140px">
+            <select
+              id="bot-level"
+              style="
+                width: 100%;
+                appearance: none;
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                color: var(--text-primary);
+                padding: 10px 14px;
+                border-radius: var(--radius);
+                font-family: 'Crimson Pro', serif;
+                font-size: 16px;
+                cursor: pointer;
+                outline: none;
+              "
+            >
+              <option value="10">10 (Max)</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+            <span
+              style="
+                position: absolute;
+                right: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: var(--text-muted);
+                font-size: 11px;
+              "
+            >
+              ▾
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="modal-section"
+          style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+          "
+        >
           <div id="lbl-bot-config-handicap" class="modal-section-title" style="flex-basis: 130px; margin-bottom: 0">
             Handicap
           </div>

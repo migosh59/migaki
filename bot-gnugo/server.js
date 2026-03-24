@@ -6,12 +6,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* On lance GNU Go en tâche de fond */
-/* Note: Adapte le chemin si nécessaire, par exemple 'gnugo' ou '/usr/games/gnugo' selon ton conteneur */
-const gnugo = spawn('/usr/games/gnugo', ['--mode', 'gtp', '--level', '10']);
+/* On stocke le processus globalement */
+let gnugo = null;
+
+/* Fonction pour tuer et relancer GNU Go avec les bons réglages à chaque partie */
+function demarrerGnuGo(level = 10, rules = 'japanese') {
+  if (gnugo) {
+    gnugo.stdout.removeAllListeners('data');
+    gnugo.kill();
+  }
+
+  const args = ['--mode', 'gtp', '--level', level.toString()];
+
+  if (rules === 'chinese') {
+    args.push('--chinese-rules');
+  } else {
+    args.push('--japanese-rules');
+  }
+
+  gnugo = spawn('/usr/games/gnugo', args);
+}
+
+/* Premier lancement par défaut au démarrage du NAS */
+demarrerGnuGo();
 
 function envoyerCommandeGTP(commande) {
   return new Promise((resolve) => {
+    if (!gnugo || gnugo.killed) resolve('');
     let reponse = '';
     const onData = (data) => {
       reponse += data.toString();
@@ -30,7 +51,13 @@ function envoyerCommandeGTP(commande) {
 app.post('/api/reset', async (req, res) => {
   const handicap = parseInt(req.body.handicap) || 0;
   const komi = parseFloat(req.body.komi) || 6.5;
-  const size = parseInt(req.body.size) || 19; /* NOUVEAU : Récupération de la taille */
+  const size = parseInt(req.body.size) || 19;
+  /* --- RÉCUPÉRATION DES NOUVEAUX PARAMÈTRES --- */
+  const rules = req.body.rules || 'japanese';
+  const level = parseInt(req.body.level) || 10;
+
+  /* On redémarre le moteur à neuf pour être 100% sûr qu'il a pris les bons arguments ! */
+  demarrerGnuGo(level, rules);
 
   /* 1. On nettoie le plateau ET on applique la taille */
   await envoyerCommandeGTP(`boardsize ${size}`);
