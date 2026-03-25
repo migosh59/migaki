@@ -72,16 +72,8 @@
         position: fixed;
         inset: 0;
         background:
-          radial-gradient(
-            ellipse at 15% 40%,
-            var(--bg-grad-1) 0%,
-            transparent 55%
-          ),
-          radial-gradient(
-            ellipse at 85% 15%,
-            var(--bg-grad-2) 0%,
-            transparent 50%
-          );
+          radial-gradient(ellipse at 15% 40%, var(--bg-grad-1) 0%, transparent 55%),
+          radial-gradient(ellipse at 85% 15%, var(--bg-grad-2) 0%, transparent 50%);
         pointer-events: none;
         z-index: 0;
       }
@@ -242,13 +234,7 @@
   <body>
     <header>
       <button id="btn-lang" aria-label="Changer de langue"></button>
-      <button
-        id="btn-theme"
-        title="Changer de thème"
-        aria-label="Changer de thème"
-      >
-        ☀️
-      </button>
+      <button id="btn-theme" title="Changer de thème" aria-label="Changer de thème">☀️</button>
       <h1>磨き MIGAKI</h1>
       <p id="header-desc"></p>
     </header>
@@ -258,16 +244,16 @@
         <div class="guide-section">
           <h2>Le Concept</h2>
           <p>
-            <strong>Migaki (磨き)</strong> signifie "polir" ou "raffiner" en
-            japonais. C'est un outil d'entraînement conçu pour les joueurs de
-            Go, basé sur le principe de la <strong>répétition espacée</strong>.
+            <strong>Migaki (磨き)</strong>
+            signifie "polir" ou "raffiner" en japonais. C'est un outil d'entraînement conçu pour les joueurs de Go, basé
+            sur le principe de la
+            <strong>répétition espacée</strong>
+            .
           </p>
           <p>
-            Plutôt que d'apprendre passivement des ouvertures (Fuseki) ou des
-            pièges (Joseki), Migaki vous force à retrouver les bons coups sur le
-            goban. L'algorithme analyse vos erreurs et vous repropose plus
-            fréquemment les séquences qui vous posent problème jusqu'à ce que
-            vous les maîtrisiez parfaitement.
+            Plutôt que d'apprendre passivement des ouvertures (Fuseki) ou des pièges (Joseki), Migaki vous force à
+            retrouver les bons coups sur le goban. L'algorithme analyse vos erreurs et vous repropose plus fréquemment
+            les séquences qui vous posent problème jusqu'à ce que vous les maîtrisiez parfaitement.
           </p>
         </div>
 
@@ -276,18 +262,16 @@
 
           <h3>1. La Bibliothèque de SGF</h3>
           <p>
-            Commencez par créer un compte pour uploader vos propres fichiers
-            SGF. Migaki lit automatiquement toutes les variations contenues dans
-            votre fichier et les transforme en exercices interactifs. Vous
-            pouvez également vous entraîner sur les SGF partagés par la
-            communauté.
+            Commencez par créer un compte pour uploader vos propres fichiers SGF. Migaki lit automatiquement toutes les
+            variations contenues dans votre fichier et les transforme en exercices interactifs. Vous pouvez également
+            vous entraîner sur les SGF partagés par la communauté.
           </p>
 
           <h3>2. Les Vies et les Erreurs</h3>
           <p>
-            Lorsque vous lancez une séquence, vous devez jouer le bon coup. Vous
-            avez droit à <strong>3 erreurs (3 vies)</strong>. Si vous perdez
-            toutes vos vies, la solution vous est révélée.
+            Lorsque vous lancez une séquence, vous devez jouer le bon coup. Vous avez droit à
+            <strong>3 erreurs (3 vies)</strong>
+            . Si vous perdez toutes vos vies, la solution vous est révélée.
           </p>
 
           <h3>3. Le Code Couleur</h3>
@@ -295,95 +279,106 @@
           <ul>
             <li>
               <span class="badge">⚪ Gris</span>
-              <strong>Non exploré :</strong> Vous n'avez pas encore joué cette
-              variation.
+              <strong>Non exploré :</strong>
+              Vous n'avez pas encore joué cette variation.
             </li>
             <li>
-              <span class="badge">🔴 Rouge</span> <strong>Échec :</strong> Vous
-              avez perdu vos 3 vies ou abandonné. Ces séquences reviendront très
-              souvent.
+              <span class="badge">🔴 Rouge</span>
+              <strong>Échec :</strong>
+              Vous avez perdu vos 3 vies ou abandonné. Ces séquences reviendront très souvent.
             </li>
             <li>
               <span class="badge">🟠 Orange</span>
-              <strong>Erreurs :</strong> Vous avez trouvé la solution, mais en
-              faisant 1 ou 2 erreurs.
+              <strong>Erreurs :</strong>
+              Vous avez trouvé la solution, mais en faisant 1 ou 2 erreurs.
             </li>
             <li>
-              <span class="badge">🟢 Vert</span> <strong>Parfait :</strong> Vous
-              avez joué la séquence entière sans la moindre erreur. L'algorithme
-              vous laissera tranquille avec celle-ci !
+              <span class="badge">🟢 Vert</span>
+              <strong>Parfait :</strong>
+              Vous avez joué la séquence entière sans la moindre erreur. L'algorithme vous laissera tranquille avec
+              celle-ci !
             </li>
           </ul>
 
           <h3>4. Cibler ses faiblesses (Filtres)</h3>
           <p>
-            Vous pouvez forcer l'algorithme à ne piocher que dans une catégorie
-            précise ! Cliquez simplement sur l'une des
-            <strong>cartes de statistiques</strong> (Gris, Rouge, Orange ou
-            Vert) pour activer le filtre. Les autres cartes se griseront.
-            Cliquez à nouveau pour le désactiver. Parfait pour réviser
-            exclusivement ses erreurs.
+            Vous pouvez forcer l'algorithme à ne piocher que dans une catégorie précise ! Cliquez simplement sur l'une
+            des
+            <strong>cartes de statistiques</strong>
+            (Gris, Rouge, Orange ou Vert) pour activer le filtre. Les autres cartes se griseront. Cliquez à nouveau pour
+            le désactiver. Parfait pour réviser exclusivement ses erreurs.
           </p>
 
           <h3>5. Visualiser ou Forcer une séquence spécifique</h3>
           <p>
-            Dans le tableau des variations situé dans la colonne de droite, vous
-            remarquerez deux petites icônes à côté de chaque nom :
+            Dans le tableau des variations situé dans la colonne de droite, vous remarquerez deux petites icônes à côté
+            de chaque nom :
           </p>
           <ul>
             <li>
-              <strong>L'icône Œil (👁) :</strong> Cliquez dessus pour revoir le
-              déroulement exact de cette séquence sur le goban comme un
-              spectateur, sans risquer de perdre des vies ou de dégrader vos
-              statistiques.
+              <strong>L'icône Œil (👁) :</strong>
+              Cliquez dessus pour revoir le déroulement exact de cette séquence sur le goban comme un spectateur, sans
+              risquer de perdre des vies ou de dégrader vos statistiques.
             </li>
             <li>
-              <strong>L'icône Lecture (▶) :</strong> Cliquez dessus pour forcer
-              l'entraînement et lancer immédiatement l'exercice sur cette
-              séquence précise.
+              <strong>L'icône Lecture (▶) :</strong>
+              Cliquez dessus pour forcer l'entraînement et lancer immédiatement l'exercice sur cette séquence précise.
             </li>
           </ul>
 
           <h3>6. Le Mode Présentation</h3>
           <p>
             Avant de vous tester, vous pouvez cliquer sur
-            <strong>Présentation</strong>. Migaki jouera alors automatiquement
-            toutes les variations de votre fichier SGF comme un film, pour vous
+            <strong>Présentation</strong>
+            . Migaki jouera alors automatiquement toutes les variations de votre fichier SGF comme un film, pour vous
             aider à les mémoriser.
           </p>
 
           <h3>7. Le Mode Exploration</h3>
           <p>
-            Envie de naviguer à votre propre rythme dans l'arbre des séquences
-            de votre SGF ? Cliquez sur <strong>🧭 Exploration</strong>. Des
-            lettres (A, B, C...) apparaîtront sur les intersections possibles
-            pour vous permettre de descendre et remonter librement dans les
-            différentes branches de votre fichier.
+            Envie de naviguer à votre propre rythme dans l'arbre des séquences de votre SGF ? Cliquez sur
+            <strong>🧭 Exploration</strong>
+            . Des lettres (A, B, C...) apparaîtront sur les intersections possibles pour vous permettre de descendre et
+            remonter librement dans les différentes branches de votre fichier.
           </p>
 
           <h3>8. Statistiques et Calendrier</h3>
           <p>
-            Cliquez sur l'icône Profil (📊) en haut à droite pour ouvrir votre
-            tableau de bord. Vous y trouverez votre calendrier d'entraînement.
-            L'assiduité est récompensée par des tampons quotidiens à l'effigie
-            de <strong>Kiloute</strong> en fonction du volume de séquences que
-            vous avez jouées ou visionnées dans la journée :
+            Cliquez sur l'icône Profil (📊) en haut à droite pour ouvrir votre tableau de bord. Vous y trouverez votre
+            calendrier d'entraînement. L'assiduité est récompensée par des tampons quotidiens à l'effigie de
+            <strong>Kiloute</strong>
+            en fonction du volume de séquences que vous avez jouées ou visionnées dans la journée :
           </p>
           <ul>
             <li>
-              <strong>Bronze :</strong> Pour un petit échauffement (1+
-              séquence).
+              <strong>Bronze :</strong>
+              Pour un petit échauffement (1+ séquence).
             </li>
             <li>
-              <strong>Argent :</strong> Pour une séance solide (30+ séquences).
+              <strong>Argent :</strong>
+              Pour une séance solide (30+ séquences).
             </li>
             <li>
-              <strong>Or :</strong> Pour les guerriers du Go (80+ séquences) !
+              <strong>Or :</strong>
+              Pour les guerriers du Go (80+ séquences) !
             </li>
           </ul>
+          <p>Vos statistiques globales se trouvent également sur ce tableau de bord.</p>
+
+          <h3>9. Jouer contre l'IA (GNU Go)</h3>
           <p>
-            Vos statistiques globales se trouvent également sur ce tableau de
-            bord.
+            Envie de faire une vraie partie ? Cliquez sur
+            <strong>🤖 Défier GNU Go</strong>
+            . Vous pourrez configurer votre partie : taille du Goban (9x9, 13x13 ou 19x19), couleur de vos pierres,
+            handicap, komi, règles (Japonaises ou Chinoises) et le niveau de l'IA (1 à 10).
+          </p>
+          <p>
+            Pendant la partie, vous pouvez utiliser les boutons
+            <strong>Passer</strong>
+            ou
+            <strong>Abandonner</strong>
+            . Si les deux joueurs passent consécutivement, l'IA calculera automatiquement le score final en incluant les
+            prisonniers !
           </p>
         </div>
       </div>
@@ -392,15 +387,16 @@
         <div class="guide-section">
           <h2>The Concept</h2>
           <p>
-            <strong>Migaki (磨き)</strong> means "to polish" or "to refine" in
-            Japanese. It is a training tool designed for Go players, based on
-            the principle of <strong>spaced repetition</strong>.
+            <strong>Migaki (磨き)</strong>
+            means "to polish" or "to refine" in Japanese. It is a training tool designed for Go players, based on the
+            principle of
+            <strong>spaced repetition</strong>
+            .
           </p>
           <p>
-            Rather than passively learning openings (Fuseki) or traps (Joseki),
-            Migaki forces you to find the right moves on the board. The
-            algorithm analyzes your mistakes and tests you more frequently on
-            the sequences you struggle with until you master them perfectly.
+            Rather than passively learning openings (Fuseki) or traps (Joseki), Migaki forces you to find the right
+            moves on the board. The algorithm analyzes your mistakes and tests you more frequently on the sequences you
+            struggle with until you master them perfectly.
           </p>
         </div>
 
@@ -409,17 +405,16 @@
 
           <h3>1. The SGF Library</h3>
           <p>
-            Start by creating an account to upload your own SGF files. Migaki
-            automatically reads all the variations contained in your file and
-            turns them into interactive exercises. You can also practice on SGFs
-            shared by the community.
+            Start by creating an account to upload your own SGF files. Migaki automatically reads all the variations
+            contained in your file and turns them into interactive exercises. You can also practice on SGFs shared by
+            the community.
           </p>
 
           <h3>2. Lives and Mistakes</h3>
           <p>
-            When a sequence starts, you must play the correct move. You are
-            allowed <strong>3 mistakes (3 lives)</strong>. If you lose all your
-            lives, the solution is revealed to you.
+            When a sequence starts, you must play the correct move. You are allowed
+            <strong>3 mistakes (3 lives)</strong>
+            . If you lose all your lives, the solution is revealed to you.
           </p>
 
           <h3>3. The Color Code</h3>
@@ -427,82 +422,102 @@
           <ul>
             <li>
               <span class="badge">⚪ Gray</span>
-              <strong>Unexplored:</strong> You haven't played this variation
-              yet.
+              <strong>Unexplored:</strong>
+              You haven't played this variation yet.
             </li>
             <li>
-              <span class="badge">🔴 Red</span> <strong>Failed:</strong> You
-              lost all 3 lives or gave up. These sequences will appear very
-              often.
+              <span class="badge">🔴 Red</span>
+              <strong>Failed:</strong>
+              You lost all 3 lives or gave up. These sequences will appear very often.
             </li>
             <li>
-              <span class="badge">🟠 Orange</span> <strong>Errors:</strong> You
-              found the solution, but made 1 or 2 mistakes along the way.
+              <span class="badge">🟠 Orange</span>
+              <strong>Errors:</strong>
+              You found the solution, but made 1 or 2 mistakes along the way.
             </li>
             <li>
-              <span class="badge">🟢 Green</span> <strong>Perfect:</strong> You
-              played the entire sequence without a single mistake. The algorithm
-              will let you rest on this one!
+              <span class="badge">🟢 Green</span>
+              <strong>Perfect:</strong>
+              You played the entire sequence without a single mistake. The algorithm will let you rest on this one!
             </li>
           </ul>
 
           <h3>4. Target your weaknesses (Filters)</h3>
           <p>
-            You can force the algorithm to only pick from a specific category!
-            Simply click on one of the <strong>statistic cards</strong> (Gray,
-            Red, Orange, or Green) to activate the filter. The other cards will
-            dim. Click again to deactivate it. Perfect for exclusively reviewing
-            your mistakes.
+            You can force the algorithm to only pick from a specific category! Simply click on one of the
+            <strong>statistic cards</strong>
+            (Gray, Red, Orange, or Green) to activate the filter. The other cards will dim. Click again to deactivate
+            it. Perfect for exclusively reviewing your mistakes.
           </p>
 
           <h3>5. View or Force a Specific Sequence</h3>
-          <p>
-            In the variations table on the right column, you will notice two
-            small icons next to each name:
-          </p>
+          <p>In the variations table on the right column, you will notice two small icons next to each name:</p>
           <ul>
             <li>
-              <strong>The Eye icon (👁):</strong> Click it to review the exact
-              flow of a specific sequence on the board as a spectator, without
-              risking any lives or damaging your stats.
+              <strong>The Eye icon (👁):</strong>
+              Click it to review the exact flow of a specific sequence on the board as a spectator, without risking any
+              lives or damaging your stats.
             </li>
             <li>
-              <strong>The Play icon (▶):</strong> Click it to force the training
-              and immediately start the exercise on this precise sequence.
+              <strong>The Play icon (▶):</strong>
+              Click it to force the training and immediately start the exercise on this precise sequence.
             </li>
           </ul>
 
           <h3>6. Presentation Mode</h3>
           <p>
             Before testing yourself, you can click on
-            <strong>Presentation</strong>. Migaki will then automatically play
-            all the variations of your SGF file like a movie, to help you
-            memorize them.
+            <strong>Presentation</strong>
+            . Migaki will then automatically play all the variations of your SGF file like a movie, to help you memorize
+            them.
           </p>
 
           <h3>7. Free Exploration Mode</h3>
           <p>
-            Want to navigate your SGF's variation tree at your own pace? Click
-            on <strong>🧭 Exploration</strong>. Letters (A, B, C...) will appear
-            on possible intersections, allowing you to freely go down and up the
+            Want to navigate your SGF's variation tree at your own pace? Click on
+            <strong>🧭 Exploration</strong>
+            . Letters (A, B, C...) will appear on possible intersections, allowing you to freely go down and up the
             different branches of your file.
           </p>
 
           <h3>8. Statistics and Calendar</h3>
           <p>
-            Click the Profile icon (📊) at the top right to open your dashboard.
-            There you will find your training calendar. Consistency is rewarded
-            with daily <strong>Kiloute</strong> stamps based on the volume of
-            sequences you have played or watched during the day:
+            Click the Profile icon (📊) at the top right to open your dashboard. There you will find your training
+            calendar. Consistency is rewarded with daily
+            <strong>Kiloute</strong>
+            stamps based on the volume of sequences you have played or watched during the day:
           </p>
           <ul>
-            <li><strong>Bronze:</strong> For a quick warm-up (1+ sequence).</li>
             <li>
-              <strong>Silver:</strong> For a solid session (30+ sequences).
+              <strong>Bronze:</strong>
+              For a quick warm-up (1+ sequence).
             </li>
-            <li><strong>Gold:</strong> For the Go warriors (80+ sequences)!</li>
+            <li>
+              <strong>Silver:</strong>
+              For a solid session (30+ sequences).
+            </li>
+            <li>
+              <strong>Gold:</strong>
+              For the Go warriors (80+ sequences)!
+            </li>
           </ul>
           <p>You will also find your all-time global statistics here.</p>
+
+          <h3>9. Play against AI (GNU Go)</h3>
+          <p>
+            Want to play a real game? Click on
+            <strong>🤖 Challenge GNU Go</strong>
+            . You can configure your match: board size (9x9, 13x13, or 19x19), your stone color, handicap, komi, rules
+            (Japanese or Chinese), and the AI level (1 to 10).
+          </p>
+          <p>
+            During the game, you can use the
+            <strong>Pass</strong>
+            or
+            <strong>Resign</strong>
+            buttons. If both players pass consecutively, the AI will automatically calculate the final score, including
+            captured prisoners!
+          </p>
         </div>
       </div>
 
@@ -521,30 +536,23 @@
       /* Gestion du bouton de langue */
       const btnLang = document.getElementById('btn-lang');
       btnLang.textContent = lang === 'fr' ? '🇬🇧' : '🇫🇷';
-      btnLang.title =
-        lang === 'fr' ? 'Switch to English' : 'Passer en français';
-      btnLang.addEventListener('click', () =>
-        setLang(lang === 'fr' ? 'en' : 'fr')
-      );
+      btnLang.title = lang === 'fr' ? 'Switch to English' : 'Passer en français';
+      btnLang.addEventListener('click', () => setLang(lang === 'fr' ? 'en' : 'fr'));
 
       /* Affichage des textes selon la langue */
       if (lang === 'en') {
-        document.getElementById('header-desc').textContent =
-          'How to use the Dojo';
+        document.getElementById('header-desc').textContent = 'How to use the Dojo';
         document.getElementById('content-en').style.display = 'block';
-        document.getElementById('btn-retour').textContent =
-          '← Back to the Dojo';
+        document.getElementById('btn-retour').textContent = '← Back to the Dojo';
       } else {
-        document.getElementById('header-desc').textContent =
-          'Comment utiliser le Dojo';
+        document.getElementById('header-desc').textContent = 'Comment utiliser le Dojo';
         document.getElementById('content-fr').style.display = 'block';
         document.getElementById('btn-retour').textContent = '← Retour au Dojo';
       }
 
       /* Gestion du bouton de thème */
       const btnTheme = document.getElementById('btn-theme');
-      const currentTheme =
-        document.documentElement.getAttribute('data-theme') || 'dark';
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
       btnTheme.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 
       btnTheme.addEventListener('click', () => {
